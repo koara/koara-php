@@ -1,0 +1,19 @@
+{
+    "name": "koara/koara-php",
+    "type": "library",
+    "description": "Official koara parser, written in PHP. It passes the koara compliancy test.",
+    "homepage": "https://github.com/koara/koara-php",
+    "keywords": [
+        "koara"
+    ],
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Andy Van Den Heuvel",
+            "email": "andy.vandenheuvel@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
