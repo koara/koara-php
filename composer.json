@@ -1,5 +1,5 @@
 {
-    "name": "koara/koara-php",
+    "name": "koara/koara",
     "type": "library",
     "description": "Official koara parser, written in PHP. It passes the koara compliancy test.",
     "homepage": "https://github.com/koara/koara-php",
