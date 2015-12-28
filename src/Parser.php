@@ -958,7 +958,6 @@ class Parser {
 		return false;
 	}
 
-
 	private function headingAhead($offset) {
 		if ($this->getToken($offset)->kind == TokenManager::EQ) {
 			$heading = 1;
@@ -998,1468 +997,1464 @@ class Parser {
 					&& !(in_array(modules, Module::LISTS) && $t->kind == TokenManager::DASH)
 					&& !(in_array(modules, Module::LISTS) && $t->kind == TokenManager::DIGITS && $this->getToken($i+1)->kind == TokenManager::DOT) && !($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK)
 	                && !(in_array(modules, Module::HEADINGS) && $this->headingAhead($i));
-// 	           return result;
-// 	           } 
-// 	}
-// 	return false;
-// }
+ 	        } 
+ 		}
+		return false;
+}
 
-// private boolean nextAfterSpace(Integer... tokens) {
-// int i = skip(1, SPACE, TAB);
-// return Arrays.asList(tokens).contains(getToken(i).kind);
-// }
+	private function nextAfterSpace(...$tokens) {
+		$i = $this->skip(1, TokenManager::SPACE, TokenManager::TAB);
+		return in_array($tokens, $this->getToken($i)->kind);
+	}
 
-//  private int newQuoteLevel(int offset) {
-//    int quoteLevel = 0;
-//    for(int i=offset;;i++) {
-//            Token t = getToken(i);
-//            if(t.kind == GT) {
-//                    quoteLevel++;
-//        } else if(t.kind != SPACE && t.kind != TAB) {
-//            return quoteLevel;
-//        }
+	private function newQuoteLevel($offset) {
+		$quoteLevel = 0;
+		for($i=$offset;;$i++) {
+			$t = getToken(i);
+			if($t->kind == TokenManager::GT) {
+				$quoteLevel++;
+			} else if($t->kind != TokenManager::SPACE && $t->kind != TokenManager::TAB) {
+				return $quoteLevel;
+			}
+		}
+	}
 
-//    }
-// }
-
-// private int skip(int offset, Integer... tokens) {
-// for(int i=offset;;i++) {
-//  Token t = getToken(i);
-//  if(t.kind == EOF || !Arrays.asList(tokens).contains(t.kind)) { return i; }
-// }
-// }
+	private function skip($offset, ...$tokens) {
+		for($i=$offset;;$i++) {
+			$t = $this->getToken($i);
+			if($t->kind == TokenManagerEOF || !in_array($tokens, $t->kind)) { return $i; }
+		}
+	}
 	
-// 	private boolean hasOrderedListAhead() {
-// 		lookAhead = 2;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanToken(DIGITS) && !scanToken(DOT);
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasOrderedListAhead() {
+		$this->lookAhead = 2;
+		$this->lastPosition = $this->scanPosition = $this->token;
+ 		try {
+ 			return !$this->scanToken(TokenManager::DIGITS) && !scanToken(TokenManager::DOT);
+ 		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 	
-// 	private boolean hasFencedCodeBlockAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanFencedCodeBlock();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasFencedCodeBlockAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanFencedCodeBlock();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 	
 	
-// 	private boolean headingHasInlineElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			Token xsp = scanPosition;
-// 			if (scanTextTokens()) {
-// 				scanPosition = xsp;
-// 				if (scanImage()) {
-// 					scanPosition = xsp;
-// 					if (scanLink()) {
-// 						scanPosition = xsp;
-// 						if (scanStrong()) {
-// 							scanPosition = xsp;
-// 							if (scanEm()) {
-// 								scanPosition = xsp;
-// 								if (scanCode()) {
-// 									scanPosition = xsp;
-// 									if (scanLooseChar()) {
-// 										return false;
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 			return true;
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function headingHasInlineElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			$xsp = $this->scanPosition;
+			if ($this->scanTextTokens()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanImage()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanLink()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanStrong()) {
+							$this->scanPosition = $xsp;
+							if ($this->scanEm()) {
+								$this->scanPosition = $xsp;
+								if ($this->scanCode()) {
+									$this->scanPosition = $xsp;
+									if ($this->scanLooseChar()) {
+										return false;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+ 			return true;
+ 		} catch (LookaheadSuccess $ls) {
+ 			return true;
+ 		}
+ 	}
 	
-// 	private boolean hasTextAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanTextTokens();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasTextAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanTextTokens();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasImageAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanImage();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasImageAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanImage();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 	
-// 	private boolean blockquoteHasEmptyLineAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanBlockquoteEmptyLine();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function blockquoteHasEmptyLineAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanBlockquoteEmptyLine();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasStrongAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrong();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasStrongAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrong();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasEmAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEm();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasEmAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !scanEm();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasCodeAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanCode();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasCodeAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !scanCode();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean blockquoteHasAnyBlockElementseAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanMoreBlockElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function blockquoteHasAnyBlockElementseAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanMoreBlockElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasBlockquoteEmptyLinesAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanBlockquoteEmptyLines();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasBlockquoteEmptyLinesAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanBlockquoteEmptyLines();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean listItemHasInlineElements() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanMoreBlockElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function listItemHasInlineElements() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanMoreBlockElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean fencedCodeBlockHasInlineTokens() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanFencedCodeBlockTokens();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function fencedCodeBlockHasInlineTokens() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanFencedCodeBlockTokens();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasInlineTextAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanTextTokens();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasInlineTextAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanTextTokens();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasInlineElementAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanInlineElement();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasInlineElementAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanInlineElement();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean imageHasAnyElements() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanImageElement();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function imageHasAnyElements() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanImageElement();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasResourceTextAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanResourceElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasResourceTextAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanResourceElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean linkHasAnyElements() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanLinkElement();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function linkHasAnyElements() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanLinkElement();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasResourceUrlAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanResourceUrl();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasResourceUrlAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanResourceUrl();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean resourceHasElementAhead() {
-// 		lookAhead = 2;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanResourceElement();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function resourceHasElementAhead() {
+		$this->lookAhead = 2;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanResourceElement();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean resourceTextHasElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanResourceTextElement();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function resourceTextHasElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanResourceTextElement();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasEmWithinStrongMultiline() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEmWithinStrongMultiline();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasEmWithinStrongMultiline() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanEmWithinStrongMultiline();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean strongMultilineHasElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrongMultilineElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function strongMultilineHasElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrongMultilineElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 	
-// 	private boolean strongWithinEmMultilineHasElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrongWithinEmMultilineElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function strongWithinEmMultilineHasElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrongWithinEmMultilineElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasImage() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanImage();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasImage() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanImage();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasLinkAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanLink();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasLinkAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanLink();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean strongEmWithinStrongAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEmWithinStrong();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function strongEmWithinStrongAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanEmWithinStrong();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean strongHasElements() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrongElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function strongHasElements() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrongElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean strongWithinEmHasElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrongWithinEmElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function strongWithinEmHasElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrongWithinEmElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean hasStrongWithinEmMultilineAhead() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrongWithinEmMultiline();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function hasStrongWithinEmMultilineAhead() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrongWithinEmMultiline();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean emMultilineContentHasElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEmMultilineContentElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function emMultilineContentHasElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanEmMultilineContentElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean emWithinStrongMultilineContentHasElementsAhaed() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEmWithinStrongMultilineContent();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function emWithinStrongMultilineContentHasElementsAhaed() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanEmWithinStrongMultilineContent();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean emHasStrongWithinEm() {
-// 		lookAhead = 2147483647;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanStrongWithinEm();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function emHasStrongWithinEm() {
+		$this->lookAhead = 2147483647;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanStrongWithinEm();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean emHasElements() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEmElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function emHasElements() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanEmElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean emWithinStrongHasElementsAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanEmWithinStrongElements();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function emWithinStrongHasElementsAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanEmWithinStrongElements();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean codeTextHasAnyTokenAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanCodeTextTokens();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function codeTextHasAnyTokenAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanCodeTextTokens();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean textHasTokensAhead() {
-// 		lookAhead = 1;
-// 		lastPosition = scanPosition = token;
-// 		try {
-// 			return !scanText();
-// 		} catch (LookaheadSuccess ls) {
-// 			return true;
-// 		}
-// 	}
+	private function textHasTokensAhead() {
+		$this->lookAhead = 1;
+		$this->lastPosition = $this->scanPosition = $this->token;
+		try {
+			return !$this->scanText();
+		} catch (LookaheadSuccess $ls) {
+			return true;
+		}
+	}
 
-// 	private boolean scanLooseChar() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(ASTERISK)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(BACKTICK)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(LBRACK)) {
-// 					scanPosition = xsp;
-// 					return scanToken(UNDERSCORE);
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanLooseChar() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::ASTERISK)) {
+			$this->scanPosition = $xsp;
+			if (scanToken(TokenManager::BACKTICK)) {
+				$this->scanPosition = $xsp;
+				if ($this->scanToken(TokenManager::LBRACK)) {
+					$this->scanPosition = $xsp;
+					return scanToken(TokenManager::UNDERSCORE);
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanText() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(BACKSLASH)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(CHAR_SEQUENCE)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(COLON)) {
-// 					scanPosition = xsp;
-// 					if (scanToken(DASH)) {
-// 						scanPosition = xsp;
-// 						if (scanToken(DIGITS)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(DOT)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(EQ)) {
-// 									scanPosition = xsp;
-// 									if (scanToken(ESCAPED_CHAR)) {
-// 										scanPosition = xsp;
-// 										if (scanToken(GT)) {
-// 											scanPosition = xsp;
-// 											if (scanToken(IMAGE_LABEL)) {
-// 												scanPosition = xsp;
-// 												if (scanToken(LPAREN)) {
-// 													scanPosition = xsp;
-// 													if (scanToken(LT)) {
-// 														scanPosition = xsp;
-// 														if (scanToken(RBRACK)) {
-// 															scanPosition = xsp;
-// 															if (scanToken(RPAREN)) {
-// 																scanPosition = xsp;
-// 																lookingAhead = true;
-// 																semanticLookAhead = !nextAfterSpace(EOL, EOF);
-// 																lookingAhead = false;
-// 																if (!semanticLookAhead || scanWhitspaceToken()) {
-// 																	return true;
-// 																}
-// 															}
-// 														}
-// 													}
-// 												}
-// 											}
-// 										}
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanText() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::BACKSLASH)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
+				$this->scanPosition = $xsp;
+				if ($this->scanToken(TokenManager::COLON)) {
+					$this->scanPosition = $xsp;
+					if ($this->scanToken(TokenManager::DASH)) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::DIGITS)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::DOT)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::EQ)) {
+									$this->scanPosition = $xsp;
+									if ($this->scanToken(TokenManager::ESCAPED_CHAR)) {
+										$this->scanPosition = $xsp;
+										if ($this->scanToken(TokenManager::GT)) {
+											$this->scanPosition = $xsp;
+											if ($this->scanToken(TokenManager::IMAGE_LABEL)) {
+												$this->scanPosition = $xsp;
+												if ($this->scanToken(TokenManager::LPAREN)) {
+													$this->scanPosition = $xsp;
+													if ($this->scanToken(TokenManager::LT)) {
+														$this->scanPosition = $xsp;
+														if ($this->scanToken(TokenManager::RBRACK)) {
+															$this->scanPosition = $xsp;
+															if ($this->scanToken(TokenManager::RPAREN)) {
+																$this->scanPosition = $xsp;
+																$this->lookingAhead = true;
+																$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
+																$this->lookingAhead = false;
+																return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanTextTokens() {
-// 		if (scanText()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanText()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanTextTokens() {
+		if ($this->scanText()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanText()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 	
-// 	private boolean scanCodeTextTokens() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(ASTERISK)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(BACKSLASH)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(CHAR_SEQUENCE)) {
-// 					scanPosition = xsp;
-// 					if (scanToken(COLON)) {
-// 						scanPosition = xsp;
-// 						if (scanToken(DASH)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(DIGITS)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(DOT)) {
-// 									scanPosition = xsp;
-// 									if (scanToken(EQ)) {
-// 										scanPosition = xsp;
-// 										if (scanToken(ESCAPED_CHAR)) {
-// 											scanPosition = xsp;
-// 											if (scanToken(IMAGE_LABEL)) {
-// 												scanPosition = xsp;
-// 												if (scanToken(LT)) {
-// 													scanPosition = xsp;
-// 													if (scanToken(LBRACK)) {
-// 														scanPosition = xsp;
-// 														if (scanToken(RBRACK)) {
-// 															scanPosition = xsp;
-// 															if (scanToken(LPAREN)) {
-// 																scanPosition = xsp;
-// 																if (scanToken(GT)) {
-// 																	scanPosition = xsp;
-// 																	if (scanToken(RPAREN)) {
-// 																		scanPosition = xsp;
-// 																		if (scanToken(UNDERSCORE)) {
-// 																			scanPosition = xsp;
-// 																			lookingAhead = true;
-// 																			semanticLookAhead = !nextAfterSpace(EOL, EOF);
-// 																			lookingAhead = false;
-// 																			if (!semanticLookAhead || scanWhitspaceToken()) {
-// 																				return true;
-// 																			}
-// 																		}
-// 																	}
-// 																}
-// 															}
-// 														}
-// 													}
-// 												}
-// 											}
-// 										}
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanCodeTextTokens() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::ASTERISK)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::BACKSLASH)) {
+				$this->scanPosition = $xsp;
+				if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
+					$this->scanPosition = $xsp;
+					if ($this->scanToken(TokenManager::COLON)) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::DASH)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::DIGITS)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::DOT)) {
+									$this->scanPosition = $xsp;
+									if ($this->scanToken(TokenManager::EQ)) {
+										$this->scanPosition = $xsp;
+										if ($this->scanToken(TokenManager::ESCAPED_CHAR)) {
+											$this->scanPosition = $xsp;
+											if ($this->scanToken(TokenManager::IMAGE_LABEL)) {
+												$this->scanPosition = $xsp;
+												if ($this->scanToken(TokenManager::LT)) {
+													$this->scanPosition = $xsp;
+													if ($this->scanToken(TokenManager::LBRACK)) {
+														$this->scanPosition = $xsp;
+														if ($this->scanToken(TokenManager::RBRACK)) {
+															$this->scanPosition = $xsp;
+															if ($this->scanToken(TokenManager::LPAREN)) {
+																$this->scanPosition = $xsp;
+																if ($this->scanToken(TokenManager::GT)) {
+																	$this->scanPosition = $xsp;
+																	if ($this->scanToken(TokenManager::RPAREN)) {
+																		$this->scanPosition = $xsp;
+																		if (scanToken(Tokenmanager::UNDERSCORE)) {
+																			$this->scanPosition = $xsp;
+																			$this->lookingAhead = true;
+																			$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
+																			$this->lookingAhead = false;
+																			return (!semanticLookAhead || scanWhitspaceToken());
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 
-// 	private boolean scanCode() {
-// 		return scanToken(BACKTICK) || scanCodeTextTokensAhead() || scanToken(BACKTICK);
-// 	}
+	private function scanCode() {
+		return $this->scanToken(TokenManager::BACKTICK) || $this->scanCodeTextTokensAhead() || $this->scanToken(TokenManager::BACKTICK);
+	}
 
-// 	private boolean scanCodeMultiline() {
-// 		if (scanToken(BACKTICK) || scanCodeTextTokensAhead()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (hasCodeTextOnNextLineAhead()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(BACKTICK);
-// 	}
+	private function scanCodeMultiline() {
+		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanCodeTextTokensAhead()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->hasCodeTextOnNextLineAhead()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::BACKTICK);
+	}
 	
-// 	private boolean scanCodeTextTokensAhead() {
-// 		if (scanCodeTextTokens()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanCodeTextTokens()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanCodeTextTokensAhead() {
+		if ($this->scanCodeTextTokens()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanCodeTextTokens()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean hasCodeTextOnNextLineAhead() {
-// 		if (scanWhitespaceTokenBeforeEol()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanToken(GT)) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanCodeTextTokensAhead();
-// 	}
+	private function hasCodeTextOnNextLineAhead() {
+		if ($this->scanWhitespaceTokenBeforeEol()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanToken(TokenManager::GT)) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanCodeTextTokensAhead();
+	}
 	
-// 	private boolean scanWhitspaceTokens() {
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanWhitspaceToken()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanWhitspaceTokens() {
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanWhitspaceToken()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanWhitespaceTokenBeforeEol() {
-// 		return scanWhitspaceTokens() || scanToken(EOL);
-// 	}
+	private function scanWhitespaceTokenBeforeEol() {
+		return $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::EOL);
+	}
 
-// 	private boolean scanEmWithinStrongElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanToken(ASTERISK)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(BACKTICK)) {
-// 								scanPosition = xsp;
-// 								return scanToken(LBRACK);
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanEmWithinStrongElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::ASTERISK)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::BACKTICK)) {
+								$this->scanPosition = $xsp;
+								return $this->scanToken(TokenManager::LBRACK);
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanEmWithinStrong() {
-// 		if (scanToken(UNDERSCORE) || scanEmWithinStrongElements()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanEmWithinStrongElements()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(UNDERSCORE);
-// 	}
+	private function scanEmWithinStrong() {
+		if ($this->scanToken(TokenManager::UNDERSCORE) || $this->scanEmWithinStrongElements()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanEmWithinStrongElements()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::UNDERSCORE);
+	}
 
-// 	private boolean scanEmElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanStrongWithinEm()) {
-// 							scanPosition = xsp;
-// 							if (scanToken(ASTERISK)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(BACKTICK)) {
-// 									scanPosition = xsp;
-// 									return scanToken(LBRACK);
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanEmElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanStrongWithinEm()) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::ASTERISK)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::BACKTICK)) {
+									$this->scanPosition = $xsp;
+									return $this->scanToken(TokenManager::LBRACK);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanEm() {
-// 		if (scanToken(UNDERSCORE) || scanEmElements()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanEmElements()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(UNDERSCORE);
-// 	}
+	private function scanEm() {
+		if ($this->scanToken(TokenManager::UNDERSCORE) || $this->scanEmElements()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanEmElements()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::UNDERSCORE);
+	}
 
-// 	private boolean scanEmWithinStrongMultilineContent() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanToken(ASTERISK)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(BACKTICK)) {
-// 								scanPosition = xsp;
-// 								return scanToken(LBRACK);
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanEmWithinStrongMultilineContent() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::ASTERISK)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenMananger::BACKTICK)) {
+								$this->scanPosition = $xsp;
+								return $this->scanToken(TokenManager::LBRACK);
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean hasNoEmWithinStrongMultilineContentAhead() {
-// 		if (scanEmWithinStrongMultilineContent()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanEmWithinStrongMultilineContent()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function hasNoEmWithinStrongMultilineContentAhead() {
+		if ($this->scanEmWithinStrongMultilineContent()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanEmWithinStrongMultilineContent()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanEmWithinStrongMultiline() {
-// 		if (scanToken(UNDERSCORE) || hasNoEmWithinStrongMultilineContentAhead()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanWhitespaceTokenBeforeEol() || hasNoEmWithinStrongMultilineContentAhead()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(UNDERSCORE);
-// 	}
+	private function scanEmWithinStrongMultiline() {
+		if ($this->scanToken(TokenManager::UNDERSCORE) || $this->hasNoEmWithinStrongMultilineContentAhead()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanWhitespaceTokenBeforeEol() || $this->hasNoEmWithinStrongMultilineContentAhead()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::UNDERSCORE);
+	}
 
-// 	private boolean scanEmMultilineContentElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					lookingAhead = true;
-// 					semanticLookAhead = multilineAhead(BACKTICK);
-// 					lookingAhead = false;
-// 					if (!semanticLookAhead || scanCodeMultiline()) {
-// 						scanPosition = xsp;
-// 						if (scanStrongWithinEmMultiline()) {
-// 							scanPosition = xsp;
-// 							if (scanToken(ASTERISK)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(BACKTICK)) {
-// 									scanPosition = xsp;
-// 									return scanToken(LBRACK);
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanEmMultilineContentElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					$this->lookingAhead = true;
+					$this->semanticLookAhead = $this->multilineAhead(TokenManager::BACKTICK);
+					$this->lookingAhead = false;
+					if (!$this->semanticLookAhead || $this->scanCodeMultiline()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanStrongWithinEmMultiline()) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::ASTERISK)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::BACKTICK)) {
+									$this->scanPosition = $xsp;
+									return $this->scanToken(TokenManager::LBRACK);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanStrongWithinEmElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanToken(BACKTICK)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(LBRACK)) {
-// 								scanPosition = xsp;
-// 								return scanToken(UNDERSCORE);
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanStrongWithinEmElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::BACKTICK)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::LBRACK)) {
+								$this->scanPosition = $xsp;
+								return scanToken(TokenManager::UNDERSCORE);
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanStrongWithinEm() {
-// 		if (scanToken(ASTERISK) || scanStrongWithinEmElements()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanStrongWithinEmElements()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(ASTERISK);
-// 	}
+	private function scanStrongWithinEm() {
+		if ($this->scanToken(TokenManager::ASTERISK) || $this->scanStrongWithinEmElements()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanStrongWithinEmElements()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::ASTERISK);
+	}
 
-// 	private boolean scanStrongElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					lookingAhead = true;
-// 					semanticLookAhead = multilineAhead(BACKTICK);
-// 					lookingAhead = false;
-// 					if (!semanticLookAhead || scanCodeMultiline()) {
-// 						scanPosition = xsp;
-// 						if (scanEmWithinStrong()) {
-// 							scanPosition = xsp;
-// 							if (scanToken(BACKTICK)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(LBRACK)) {
-// 									scanPosition = xsp;
-// 									return scanToken(UNDERSCORE);
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanStrongElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					$this->lookingAhead = true;
+					$this->semanticLookAhead = $this->multilineAhead(TokenManager::BACKTICK);
+					$this->lookingAhead = false;
+					if (!$this->semanticLookAhead || $this->scanCodeMultiline()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanEmWithinStrong()) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::BACKTICK)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::LBRACK)) {
+									$this->scanPosition = $xsp;
+									return $this->scanToken(TokenManager::UNDERSCORE);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanStrong() {
-// 		if (scanToken(ASTERISK) || scanStrongElements()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanStrongElements()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(ASTERISK);
-// 	}
+	private function scanStrong() {
+		if ($this->scanToken(TokenManager::ASTERISK) || $this->scanStrongElements()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanStrongElements()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::ASTERISK);
+	}
 
-// 	private boolean scanStrongWithinEmMultilineElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanToken(BACKTICK)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(LBRACK)) {
-// 								scanPosition = xsp;
-// 								return scanToken(UNDERSCORE);
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanStrongWithinEmMultilineElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::BACKTICK)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::LBRACK)) {
+								$this->scanPosition = $xsp;
+								return $this->scanToken(TokenManager::UNDERSCORE);
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanForMoreStrongWithinEmMultilineElements() {
-// 		if (scanStrongWithinEmMultilineElements()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanStrongWithinEmMultilineElements()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanForMoreStrongWithinEmMultilineElements() {
+		if ($this->scanStrongWithinEmMultilineElements()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanStrongWithinEmMultilineElements()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanStrongWithinEmMultiline() {
-// 		if (scanToken(ASTERISK) || scanForMoreStrongWithinEmMultilineElements()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanWhitespaceTokenBeforeEol() || scanForMoreStrongWithinEmMultilineElements()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return scanToken(ASTERISK);
-// 	}
+	private function scanStrongWithinEmMultiline() {
+		if ($this->scanToken(TokenManager::ASTERISK) || $this->scanForMoreStrongWithinEmMultilineElements()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanWhitespaceTokenBeforeEol() || $this->scanForMoreStrongWithinEmMultilineElements()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return $this->scanToken(TokenManager::ASTERISK);
+	}
 
-// 	private boolean scanStrongMultilineElements() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanEmWithinStrongMultiline()) {
-// 							scanPosition = xsp;
-// 							if (scanToken(BACKTICK)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(LBRACK)) {
-// 									scanPosition = xsp;
-// 									return scanToken(UNDERSCORE);
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanStrongMultilineElements() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanEmWithinStrongMultiline()) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::BACKTICK)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::LBRACK)) {
+									$this->scanPosition = $xsp;
+									return $this->scanToken(TokenManager::UNDERSCORE);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanResourceTextElement() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(ASTERISK)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(BACKSLASH)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(BACKTICK)) {
-// 					scanPosition = xsp;
-// 					if (scanToken(CHAR_SEQUENCE)) {
-// 						scanPosition = xsp;
-// 						if (scanToken(COLON)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(DASH)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(DIGITS)) {
-// 									scanPosition = xsp;
-// 									if (scanToken(DOT)) {
-// 										scanPosition = xsp;
-// 										if (scanToken(EQ)) {
-// 											scanPosition = xsp;
-// 											if (scanToken(ESCAPED_CHAR)) {
-// 												scanPosition = xsp;
-// 												if (scanToken(IMAGE_LABEL)) {
-// 													scanPosition = xsp;
-// 													if (scanToken(GT)) {
-// 														scanPosition = xsp;
-// 														if (scanToken(LBRACK)) {
-// 															scanPosition = xsp;
-// 															if (scanToken(LPAREN)) {
-// 																scanPosition = xsp;
-// 																if (scanToken(LT)) {
-// 																	scanPosition = xsp;
-// 																	if (scanToken(RBRACK)) {
-// 																		scanPosition = xsp;
-// 																		if (scanToken(UNDERSCORE)) {
-// 																			scanPosition = xsp;
-// 																			lookingAhead = true;
-// 																			semanticLookAhead = !nextAfterSpace(RPAREN);
-// 																			lookingAhead = false;
-// 																			return (!semanticLookAhead || scanWhitspaceToken());
-// 																		}
-// 																	}
-// 																}
-// 															}
-// 														}
-// 													}
-// 												}
-// 											}
-// 										}
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanResourceTextElement() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::ASTERISK)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::BACKSLASH)) {
+				$this->scanPosition = $xsp;
+				if ($this->scanToken(TokenManager::BACKTICK)) {
+					$this->scanPosition = $xsp;
+					if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::COLON)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::DASH)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::DIGITS)) {
+									$this->scanPosition = $xsp;
+									if ($this->scanToken(TokenManager::DOT)) {
+										$this->scanPosition = $xsp;
+										if ($this->scanToken(TokenManager::EQ)) {
+											$this->scanPosition = $xsp;
+											if ($this->scanToken(TokenManager::ESCAPED_CHAR)) {
+												$this->scanPosition = $xsp;
+												if ($this->scanToken(TokenManager::IMAGE_LABEL)) {
+													$this->scanPosition = $xsp;
+													if ($this->scanToken(TokenManager::GT)) {
+														$this->scanPosition = $xsp;
+														if ($this->scanToken(TokenManager::LBRACK)) {
+															$this->scanPosition = $xsp;
+															if ($this->scanToken(TokenManager::LPAREN)) {
+																$this->scanPosition = $xsp;
+																if ($this->scanToken(TokenManager::LT)) {
+																	$this->scanPosition = $xsp;
+																	if ($this->scanToken(TokenManager::RBRACK)) {
+																		$this->scanPosition = $xsp;
+																		if ($this->scanToken(TokenManager::UNDERSCORE)) {
+																			$this->scanPosition = $xsp;
+																			$this->lookingAhead = true;
+																			$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::RPAREN);
+																			$this->lookingAhead = false;
+																			return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanImageElement() {
-// 		Token xsp = scanPosition;
-// 		if (scanResourceElements()) {
-// 			scanPosition = xsp;
-// 			if (scanLooseChar()) {
-// 				return true;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanImageElement() {
+		$xsp = $this->scanPosition;
+		if ($this->scanResourceElements()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanLooseChar()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanResourceTextElements() {
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanResourceTextElement()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanResourceTextElements() {
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanResourceTextElement()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanResourceUrl() {
-// 		return scanToken(LPAREN) || scanWhitspaceTokens() || scanResourceTextElements() || scanWhitspaceTokens() || scanToken(RPAREN);
-// 	}
+	private function scanResourceUrl() {
+		return $this->scanToken(TokenManager::LPAREN) || $this->scanWhitspaceTokens() || $this->scanResourceTextElements()
+			|| $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::RPAREN);
+	}
 
-// 	private boolean scanLinkElement() {
-// 		Token xsp = scanPosition;
-// 		if (scanImage()) {
-// 			scanPosition = xsp;
-// 			if (scanStrong()) {
-// 				scanPosition = xsp;
-// 				if (scanEm()) {
-// 					scanPosition = xsp;
-// 					if (scanCode()) {
-// 						scanPosition = xsp;
-// 						if (scanResourceElements()) {
-// 							scanPosition = xsp;
-// 							return scanLooseChar();
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanLinkElement() {
+		$xsp = $this->scanPosition;
+		if ($this->scanImage()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanStrong()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanEm()) {
+					$this->scanPosition = $xsp;
+					if ($this->scanCode()) {
+						$this->scanPosition = $xsp;
+						if ($this->scanResourceElements()) {
+							$this->scanPosition = $xsp;
+							return $this->scanLooseChar();
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanResourceElement() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(BACKSLASH)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(COLON)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(CHAR_SEQUENCE)) {
-// 					scanPosition = xsp;
-// 					if (scanToken(DASH)) {
-// 						scanPosition = xsp;
-// 						if (scanToken(DIGITS)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(DOT)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(EQ)) {
-// 									scanPosition = xsp;
-// 									if (scanToken(ESCAPED_CHAR)) {
-// 										scanPosition = xsp;
-// 										if (scanToken(IMAGE_LABEL)) {
-// 											scanPosition = xsp;
-// 											if (scanToken(GT)) {
-// 												scanPosition = xsp;
-// 												if (scanToken(LPAREN)) {
-// 													scanPosition = xsp;
-// 													if (scanToken(LT)) {
-// 														scanPosition = xsp;
-// 														if (scanToken(RPAREN)) {
-// 															scanPosition = xsp;
-// 															lookingAhead = true;
-// 															semanticLookAhead = !nextAfterSpace(RBRACK);
-// 															lookingAhead = false;
-// 															return (!semanticLookAhead || scanWhitspaceToken());
-// 														}
-// 													}
-// 												}
-// 											}
-// 										}
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanResourceElement() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::BACKSLASH)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::COLON)) {
+				$this->scanPosition = $xsp;
+				if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
+					$this->scanPosition = $xsp;
+					if ($this->scanToken(TokenManager::DASH)) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::DIGITS)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::DOT)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::EQ)) {
+									$this->scanPosition = $xsp;
+									if ($this->scanToken(TokenManager::ESCAPED_CHAR)) {
+										$this->scanPosition = $xsp;
+										if ($this->scanToken(TokenManager::IMAGE_LABEL)) {
+											$this->scanPosition = $xsp;
+											if ($this->scanToken(TokenManager::GT)) {
+												$this->scanPosition = $xsp;
+												if ($this->scanToken(TokenManager::LPAREN)) {
+													$this->scanPosition = $xsp;
+													if ($this->scanToken(Tokenmanager::LT)) {
+														$this->scanPosition = $xsp;
+														if ($this->scanToken(TokenManager::RPAREN)) {
+															$this->scanPosition = $xsp;
+															$this->lookingAhead = true;
+															$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::RBRACK);
+															$this->lookingAhead = false;
+															return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanResourceElements() {
-// 		if (scanResourceElement()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanResourceElement()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanResourceElements() {
+		if ($this->scanResourceElement()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanResourceElement()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanLink() {
-// 		if (scanToken(LBRACK) || scanWhitspaceTokens() || scanLinkElement()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanLinkElement()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		if (scanWhitspaceTokens() || scanToken(RBRACK)) {
-// 			return true;
-// 		}
-// 		xsp = scanPosition;
-// 		if (scanResourceUrl()) {
-// 			scanPosition = xsp;
-// 		}
-// 		return false;
-// 	}
+	private function scanLink() {
+		if ($this->scanToken(TokenManager::LBRACK) || $this->scanWhitspaceTokens() || $this->scanLinkElement()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanLinkElement()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		if ($this->scanWhitspaceTokens() || $this->scanToken(TokenManager::RBRACK)) {
+			return true;
+		}
+		$xsp = $this->scanPosition;
+		if ($this->scanResourceUrl()) {
+			$this->scanPosition = $xsp;
+		}
+		return false;
+	}
 
-// 	private boolean scanImage() {
-// 		if (scanToken(LBRACK) || scanWhitspaceTokens() || scanToken(IMAGE_LABEL) || scanImageElement()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanImageElement()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		if (scanWhitspaceTokens() || scanToken(RBRACK)) {
-// 			return true;
-// 		}
-// 		xsp = scanPosition;
-// 		if (scanResourceUrl()) {
-// 			scanPosition = xsp;
-// 		}
-// 		return false;
-// 	}
+	private function scanImage() {
+		if ($this->scanToken(TokenManager::LBRACK) || $this->scanWhitspaceTokens() || $this->scanToken(IMAGE_LABEL) || $this->scanImageElement()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanImageElement()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		if ($this->scanWhitspaceTokens() || $this->scanToken(TokenManager::RBRACK)) {
+			return true;
+		}
+		$xsp = $this->scanPosition;
+		if ($this->scanResourceUrl()) {
+			$this->scanPosition = $xsp;
+		}
+		return false;
+	}
 
-// 	private boolean scanInlineElement() {
-// 		Token xsp = scanPosition;
-// 		if (scanTextTokens()) {
-// 			scanPosition = xsp;
-// 			if (scanImage()) {
-// 				scanPosition = xsp;
-// 				if (scanLink()) {
-// 					scanPosition = xsp;
-// 					lookingAhead = true;
-// 					semanticLookAhead = multilineAhead(ASTERISK);
-// 					lookingAhead = false;
-// 					if (!semanticLookAhead || scanToken(ASTERISK)) {
-// 						scanPosition = xsp;
-// 						lookingAhead = true;
-// 						semanticLookAhead = multilineAhead(UNDERSCORE);
-// 						lookingAhead = false;
-// 						if (!semanticLookAhead || scanToken(UNDERSCORE)) {
-// 							scanPosition = xsp;
-// 							lookingAhead = true;
-// 							semanticLookAhead = multilineAhead(BACKTICK);
-// 							lookingAhead = false;
-// 							if (!semanticLookAhead || scanCodeMultiline()) {
-// 								scanPosition = xsp;
-// 								return scanLooseChar();
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanInlineElement() {
+		$xsp = $this->scanPosition;
+		if ($this->scanTextTokens()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanImage()) {
+				$this->scanPosition = $xsp;
+				if ($this->scanLink()) {
+					$this->scanPosition = $xsp;
+					$this->lookingAhead = true;
+					$this->semanticLookAhead = $this->multilineAhead(TokenManager::ASTERISK);
+					$this->lookingAhead = false;
+					if (!$this->semanticLookAhead || $this->scanToken(TokenManager::ASTERISK)) {
+						$this->scanPosition = $xsp;
+						$this->lookingAhead = true;
+						$this->semanticLookAhead = $this->multilineAhead(TokenManager::UNDERSCORE);
+						$this->lookingAhead = false;
+						if (!$this->semanticLookAhead || $this->scanToken(TokenManager::UNDERSCORE)) {
+							$this->scanPosition = $xsp;
+							$lookingAhead = true;
+							$this->semanticLookAhead = $this->multilineAhead(TokenManager::BACKTICK);
+							$this->lookingAhead = false;
+							if (!$this->semanticLookAhead || $this->scanCodeMultiline()) {
+								$this->scanPosition = $xsp;
+								return $this->scanLooseChar();
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanParagraph() {
-// 		Token xsp;
-// 		if (scanInlineElement()) {
-// 			return true;
-// 		}
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanInlineElement()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanParagraph() {
+		$xsp;
+		if ($this->scanInlineElement()) {
+			return true;
+		}
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanInlineElement()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanForCodeLanguageElement() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(CHAR_SEQUENCE)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(BACKTICK)) {
-// 				return true;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanForCodeLanguageElement() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::BACKTICK)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanForCodeLanguageElements() {
-// 		if (scanForCodeLanguageElement()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanForCodeLanguageElement()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanForCodeLanguageElements() {
+		if ($this->scanForCodeLanguageElement()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanForCodeLanguageElement()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanWhitspaceToken() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(SPACE)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(TAB)) {
-// 				return true;
-// 			}
-// 		}
-// 		return false;
-// 	}
-// 	private boolean scanNoFencedCodeBlockAhead() {
-// 		if (scanToken(EOL) || scanWhitspaceTokens() || scanToken(BACKTICK)) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		while (true) {
-// 			xsp = scanPosition;
-// 			if (scanToken(BACKTICK)) {
-// 				scanPosition = xsp;
-// 				break;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanWhitspaceToken() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::SPACE)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::TAB)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
-// 	private boolean scanFencedCodeBlockTokens() {
-// 		Token xsp = scanPosition;
-// 		if (scanToken(ASTERISK)) {
-// 			scanPosition = xsp;
-// 			if (scanToken(BACKSLASH)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(CHAR_SEQUENCE)) {
-// 					scanPosition = xsp;
-// 					if (scanToken(COLON)) {
-// 						scanPosition = xsp;
-// 						if (scanToken(DASH)) {
-// 							scanPosition = xsp;
-// 							if (scanToken(DIGITS)) {
-// 								scanPosition = xsp;
-// 								if (scanToken(DOT)) {
-// 									scanPosition = xsp;
-// 									if (scanToken(EQ)) {
-// 										scanPosition = xsp;
-// 										if (scanToken(ESCAPED_CHAR)) {
-// 											scanPosition = xsp;
-// 											if (scanToken(IMAGE_LABEL)) {
-// 												scanPosition = xsp;
-// 												if (scanToken(LT)) {
-// 													scanPosition = xsp;
-// 													if (scanToken(GT)) {
-// 														scanPosition = xsp;
-// 														if (scanToken(LBRACK)) {
-// 															scanPosition = xsp;
-// 															if (scanToken(RBRACK)) {
-// 																scanPosition = xsp;
-// 																if (scanToken(LPAREN)) {
-// 																	scanPosition = xsp;
-// 																	if (scanToken(RPAREN)) {
-// 																		scanPosition = xsp;
-// 																		if (scanToken(UNDERSCORE)) {
-// 																			scanPosition = xsp;
-// 																			if (scanToken(BACKTICK)) {
-// 																				scanPosition = xsp;
-// 																				lookingAhead = true;
-// 																				semanticLookAhead = !nextAfterSpace(EOL, EOF);
-// 																				lookingAhead = false;
-// 																				if (!semanticLookAhead || scanWhitspaceToken()) {
-// 																					scanPosition = xsp;
-// 																					lookingAhead = true;
-// 																					semanticLookAhead = !fencesAhead();
-// 																					lookingAhead = false;
-// 																					return !semanticLookAhead || scanToken(EOL) || scanWhitspaceTokens();
-// 																				}
-// 																			}
-// 																		}
-// 																	}
-// 																}
-// 															}
-// 														}
-// 													}
-// 												}
-// 											}
-// 										}
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanNoFencedCodeBlockAhead() {
+		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::BACKTICK)) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanToken(TokenManager::BACKTICK)) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
+	
+	private function scanFencedCodeBlockTokens() {
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::ASTERISK)) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::BACKSLASH)) {
+				$this->scanPosition = $xsp;
+				if ($this>scanToken(TokenManager::CHAR_SEQUENCE)) {
+					$this->scanPosition = $xsp;
+					if ($this->scanToken(TokenManager::COLON)) {
+						$this->scanPosition = $xsp;
+						if ($this->scanToken(TokenManager::DASH)) {
+							$this->scanPosition = $xsp;
+							if ($this->scanToken(TokenManager::DIGITS)) {
+								$this->scanPosition = $xsp;
+								if ($this->scanToken(TokenManager::DOT)) {
+									$this->scanPosition = $xsp;
+									if ($this->scanToken(TokenManager::EQ)) {
+										$this->scanPosition = $xsp;
+										if ($this->scanToken(TokenManager::ESCAPED_CHAR)) {
+											$this->scanPosition = $xsp;
+											if ($this->scanToken(TokenManager::IMAGE_LABEL)) {
+												$this->scanPosition = $xsp;
+												if ($this->scanToken(TokenManager::LT)) {
+													$this->scanPosition = $xsp;
+													if ($this->scanToken(TokenManager::GT)) {
+														$this->scanPosition = $xsp;
+														if ($this->scanToken(TokenManager::LBRACK)) {
+															$this->scanPosition = $xsp;
+															if ($this->scanToken(TokenManager::RBRACK)) {
+																$this->scanPosition = $xsp;
+																if ($this->scanToken(TokenManager::LPAREN)) {
+																	$this->scanPosition = $xsp;
+																	if ($this->scanToken(TokenManager::RPAREN)) {
+																		$this->scanPosition = $xsp;
+																		if ($this->scanToken(TokenManager::UNDERSCORE)) {
+																			$this->scanPosition = $xsp;
+																			if ($this->scanToken(TokenManager::BACKTICK)) {
+																				$this->scanPosition = $xsp;
+																				$this->lookingAhead = true;
+																				$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
+																				$this->lookingAhead = false;
+																				if (!$thi->semanticLookAhead || $this->scanWhitspaceToken()) {
+																					$this->scanPosition = $xsp;
+																					$this->lookingAhead = true;
+																					$this->semanticLookAhead = !$this->fencesAhead();
+																					$this->lookingAhead = false;
+																					return !$this->semanticLookAhead || $this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens();
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanFencedCodeBlock() {
-// 		if (scanToken(BACKTICK) || scanToken(BACKTICK) || scanToken(BACKTICK)) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		while (true) {
-// 			xsp = scanPosition;
-// 			if (scanToken(BACKTICK)) {
-// 				scanPosition = xsp;
-// 				break;
-// 			}
-// 		}
-// 		if (scanWhitspaceTokens()) {
-// 			return true;
-// 		}
-// 		xsp = scanPosition;
-// 		if (scanForCodeLanguageElements()) {
-// 			scanPosition = xsp;
-// 		}
-// 		xsp = scanPosition;
-// 		if (scanToken(EOL) || scanWhitspaceTokens()) {
-// 			scanPosition = xsp;
-// 		}
-// 		while (true) {
-// 			xsp = scanPosition;
-// 			if (scanFencedCodeBlockTokens()) {
-// 				scanPosition = xsp;
-// 				break;
-// 			}
-// 		}
-// 		xsp = scanPosition;
-// 		if (scanNoFencedCodeBlockAhead()) {
-// 			scanPosition = xsp;
-// 		}
-// 		return false;
-// 	}
+	private function scanFencedCodeBlock() {
+		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK)) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanToken(TokenManager::BACKTICK)) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		if ($this->scanWhitspaceTokens()) {
+			return true;
+		}
+		$xsp = $this->scanPosition;
+		if ($this->scanForCodeLanguageElements()) {
+			$this->scanPosition = $xsp;
+		}
+		$xsp = $this->scanPosition;
+		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens()) {
+			$this->scanPosition = $xsp;
+		}
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanFencedCodeBlockTokens()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		$xsp = $this->scanPosition;
+		if ($this->scanNoFencedCodeBlockAhead()) {
+			$this->scanPosition = $xsp;
+		}
+		return false;
+	}
 
-// 	private boolean scanBlockquoteEmptyLines() {
-// 		return scanBlockquoteEmptyLine() || scanToken(EOL);
-// 	}
+	private function scanBlockquoteEmptyLines() {
+		return $this->scanBlockquoteEmptyLine() || $this->scanToken(TokenManager::EOL);
+	}
 
-// 	private boolean scanBlockquoteEmptyLine() {
-// 		if (scanToken(EOL) || scanWhitspaceTokens() || scanToken(GT) || scanWhitspaceTokens()) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanToken(GT) || scanWhitspaceTokens()) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanBlockquoteEmptyLine() {
+		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::GT) || $this->scanWhitspaceTokens()) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanToken(TokenManager::GT) || $this->scanWhitspaceTokens()) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanForHeadersigns() {
-// 		if (scanToken(EQ)) {
-// 			return true;
-// 		}
-// 		Token xsp;
-// 		loop: while (true) {
-// 			xsp = scanPosition;
-// 			if (scanToken(EQ)) {
-// 				scanPosition = xsp;
-// 				break loop;
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanForHeadersigns() {
+		if ($this->scanToken(TokenManager::EQ)) {
+			return true;
+		}
+		$xsp;
+		while (true) {
+			$xsp = $this->scanPosition;
+			if ($this->scanToken(TokenManager::EQ)) {
+				$this->scanPosition = $xsp;
+				break;
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanMoreBlockElements() {
-// 		Token xsp = scanPosition;
-// 		lookingAhead = true;
-// 		semanticLookAhead = headingAhead(1);
-// 		lookingAhead = false;
-// 		if (!semanticLookAhead || scanForHeadersigns()) {
-// 			scanPosition = xsp;
-// 			if (scanToken(GT)) {
-// 				scanPosition = xsp;
-// 				if (scanToken(DASH)) {
-// 					scanPosition = xsp;
-// 					if (scanToken(DIGITS) || scanToken(DOT)) {
-// 						scanPosition = xsp;
-// 						if (scanFencedCodeBlock()) {
-// 							scanPosition = xsp;
-// 							return scanParagraph();
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return false;
-// 	}
+	private function scanMoreBlockElements() {
+		$xsp = $this->scanPosition;
+		$this->lookingAhead = true;
+		$this->semanticLookAhead = $this->headingAhead(1);
+		$this->lookingAhead = false;
+		if (!$this->semanticLookAhead || $this->scanForHeadersigns()) {
+			$this->scanPosition = $xsp;
+			if ($this->scanToken(TokenManager::GT)) {
+				$this->scanPosition = $xsp;
+				if ($this->scanToken(TokenManager::DASH)) {
+					$this->scanPosition = $xsp;
+					if ($this->scanToken(TokenManager::DIGITS) || $this->scanToken(TokenManager::DOT)) {
+						$this->scanPosition = $xsp;
+						if ($this->scanFencedCodeBlock()) {
+							$this->scanPosition = $xsp;
+							return scanParagraph();
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-// 	private boolean scanToken(int kind) {
-// 		if (scanPosition == lastPosition) {
-// 			lookAhead--;
-// 			if (scanPosition.next == null) {
-// 				lastPosition = scanPosition = scanPosition.next = tm.getNextToken();
-// 			} else {
-// 				lastPosition = scanPosition = scanPosition.next;
-// 			}
-// 		} else {
-// 			scanPosition = scanPosition.next;
-// 		}
-// 		if (scanPosition.kind != kind) {
-// 			return true;
-// 		}
-// 		if (lookAhead == 0 && scanPosition == lastPosition) {
-// 			throw lookAheadSuccess;
-// 		}
-// 		return false;
-// 	}
+	private function scanToken($kind) {
+		if ($this->scanPosition == $this->lastPosition) {
+			$this->lookAhead--;
+			if ($this->scanPosition->next == null) {
+				$this->lastPosition = $this->scanPosition = $this->scanPosition->next = $tm->getNextToken();
+			} else {
+				$this->lastPosition = $this->scanPosition = $this->scanPosition->next;
+			}
+		} else {
+			$this->scanPosition = $this->scanPosition->next;
+		}
+		if ($this->scanPosition->kind != $kind) {
+			return true;
+		}
+		if ($this->lookAhead == 0 && $this->scanPosition == $this->lastPosition) {
+			throw $this->lookAheadSuccess;
+		}
+		return false;
+	}
 	
  	private function getNextTokenKind() {
  		if($this->nextTokenKind != -1) { 
@@ -2473,33 +2468,33 @@ class Parser {
 	
  	private function consumeToken($kind) {
  		$old = $this->token;
-// 		if ($this->token->next != null) {
-// 			token = token.next;
-// 		} else {
-// 			token = token.next = tm.getNextToken();
-// 		}
-// 		nextTokenKind = -1;
-// 		if (token.kind == kind) {
-// 			return token;
-// 		}
-// 		token = old;
+		if ($this->token->next != null) {
+			$this->token = $this->token->next;
+		} else {
+			$this->token = $this->token->next = $this->tm->getNextToken();
+		}
+		$this->nextTokenKind = -1;
+		if ($this->token->kind == $kind) {
+			return token;
+		}
+		$this->token = $old;
  		return $this->token;
  	}
 	
-// 	private Token getToken(int index) {
-// 		Token t = lookingAhead ? scanPosition : token;
-// 		for (int i = 0; i < index; i++) {
-// 			if (t.next != null) {
-// 				t = t.next;
-// 			} else {
-// 				t = t.next = tm.getNextToken();
-// 			}
-// 		}
-// 		return t;
-// 	}
+	private function getToken($index) {
+		$t = $this->lookingAhead ? $this->scanPosition : $this->token;
+		for ($i = 0; $i < $index; $i++) {
+			if ($t->next != null) {
+				$t = $t->next;
+			} else {
+				$t = $t->next = $this->tm->getNextToken();
+			}
+		}
+		return t;
+	}
 	
-// 	public void setModules(Module... modules) {
-// 		this.modules = Arrays.asList(modules);
-// 	}
+	public function setModules(...$modules) {
+		$this->modules = $modules;
+	}
 	
 }
