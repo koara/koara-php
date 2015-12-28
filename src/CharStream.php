@@ -1,143 +1,130 @@
 <?php
-
 namespace Koara;
 
-class CharStream
-{
-    private $available = 4096;
-    private $bufsize = 4096;
-    private $tokenBegin;
-    private $bufcolumn = [];
-    private $bufpos = -1;
-    private $bufline = [];
-    private $column = 0;
-    private $line = 1;
-    private $reader;
-    private $buffer = [];
-    private $maxNextCharInd = 0;
-    private $inBuf = 0;
-    private $prevCharIsLF;
-    private $tabSize = 4;
+use Exception;
 
-    public function __construct($reader)
-    {
-        $this->reader = $reader;
-    }
+class CharStream {
 
-    public function beginToken()
-    {
-        $this->tokenBegin = -1;
-        $c = $this->readChar();
-        $this->tokenBegin = $this->bufpos;
+	private $available = 4096;
+	private $bufsize = 4096;
+	private $tokenBegin;
+	private $bufcolumn = [];
+	private $bufpos = -1;
+	private $bufline = [];
+	private $column = 0;
+	private $line = 1;
+	private $prevCharIsLF;
+	private $resource;
+	private $buffer;
+	private $maxNextCharInd = 0;
+	private $inBuf = 0;
+	private $tabSize = 4;
 
-        return $c;
-    }
+	public function __construct($resource) {
+ 		$this->resource = $resource;
+	}
 
-    protected function readChar()
-    {
-        if ($this->inBuf > 0) {
-            --$this->inBuf;
-            if (++$this->bufpos == $this->bufsize) {
-                $this->bufpos = 0;
-            }
+	public function beginToken() {
+		$this->tokenBegin = -1;
+		$c = $this->readChar();
+		$this->tokenBegin = $this->bufpos;
+		return $c;
+	}
 
-            return $buffer[$this->bufpos];
-        }
-        if (++$this->bufpos >= $this->maxNextCharInd) {
-            $this->fillBuff();
-        }
-        $c = $this->buffer[$this->bufpos];
-        $this->updateLineColumn($c);
+	protected function readChar() {
+		if ($this->inBuf > 0) {
+			--$inBuf;
+			if (++$this->bufpos == $this->bufsize) {
+				$this->bufpos = 0;
+			}
+			return $this->buffer[$this->bufpos];
+		}
+		if (++$this->bufpos >= $this->maxNextCharInd) {
+			$this->fillBuff();
+		}
+		$c = $this->buffer[$this->bufpos];
+		$this->updateLineColumn($c);
+		return $c;
+	}
 
-        return $c;
-    }
+	private function fillBuff() {
+		if ($this->maxNextCharInd == $this->available) {
+			if ($this->available == $this->bufsize) {
+				$this->bufpos = 0;
+				$this->maxNextCharInd = 0;
+				if ($this->tokenBegin > 2048) {
+					$this->available = $this->tokenBegin;
+				}
+			} else {
+				$this->available = $this->bufsize;
+			}
+		}
+		$i;
+ 		try {
+ 			$buffer = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
+ 			if($buffer == NULL) {
+ 				throw new Exception('No more data');
+ 			} else {
+ 				$this->maxNextCharInd += strlen($buffer);
+ 			}
+ 		} catch (Exception $e) {
+ 			--$this->bufpos;
+ 			$this->backup(0);
+ 			if ($this->tokenBegin == -1) {
+				$this->tokenBegin = $this->bufpos;
+			}
+			throw $e;
+		}
+ 	}
 
-    private function fillBuff()
-    {
-        // 		if (maxNextCharInd == available) {
-    // 			if (available == bufsize) {
-    // 				bufpos = 0;
-    // 				maxNextCharInd = 0;
-    // 				if (tokenBegin > 2048) {
-    // 					available = tokenBegin;
-    // 				} 
-    // 			} else {
-    // 				available = bufsize;
-    // 			} 
-    // 		}
-    // 		int i;
-    // 		try {
-    // 			if ((i = reader.read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1) {
-    // 				reader.close();
-    // 				throw new IOException();
-    // 			} else {
-    // 				maxNextCharInd += i;
-    // 			}
-    // 		} catch (IOException e) {
-    // 			--bufpos;
-    // 			backup(0);
-    // 			if (tokenBegin == -1) {
-    // 				tokenBegin = bufpos;
-    // 			}
-    // 			throw e;
-    // 		}
-    }
+	protected function backup($amount) {
+		$this->inBuf += $amount;
+		if (($this->bufpos -= $amount) < 0) {
+			$this->bufpos += $this->bufsize;
+		}
+	}
 
-    protected function backup($amount)
-    {
-        $this->inBuf += $amount;
-        if (($this->bufpos -= $amount) < 0) {
-            $this->bufpos += $this->bufsize;
-        }
-    }
+	private function updateLineColumn($c) {
+		$this->column++;
+		if ($this->prevCharIsLF) {
+			$this->prevCharIsLF = false;
+			$this->column = 1;
+			$this->line += $this->column;
+		}
 
-    private function updateLineColumn($c)
-    {
-        ++$this->column;
-        if ($this->prevCharIsLF) {
-            $this->prevCharIsLF = false;
-            $this->column = 1;
-            $this->line += $this->column++;
-        }
+		switch ($c) {
+			case '\n': $this->prevCharIsLF = true; break;
+			case '\t':
+				$this->column--;
+				$this->column += ($this->tabSize - ($this->column % $this->tabSize));
+				break;
+		}
+		$this->bufline[$this->bufpos] = $this->line;
+		$this->bufcolumn[$this->bufpos] = $this->column;
+	}
 
-        switch ($c) {
-        case '\n': $this->prevCharIsLF = true; break;
-        case '\t':
-            $this->column--;
-            $this->column += ($this->tabSize - ($this->column % $this->tabSize));
-            break;
-        }
-        $this->bufline[$this->bufpos] = $this->line;
-        $this->bufcolumn[$this->bufpos] = $this->column;
-    }
+	public function getImage() {
+		if ($this->bufpos >= $this->tokenBegin) {
+			return substr ($this->buffer, $this->tokenBegin, $this->pos - $this->tokenBegin + 1);
+ 		} else {
+ 			return substr($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin).substr($this->buffer, 0, $this->bufpos + 1);
+ 		}
+ 	}
 
-    // TODO: can token
-    protected function getImage()
-    {
-        if ($this->bufpos >= $this->tokenBegin) {
-            //return new String($this->buffer, $this->tokenBegin, $this->bufpos - $this->tokenBegin + 1);
-        } else {
-            //return new String(buffer, tokenBegin, bufsize - tokenBegin) + new String(buffer, 0, bufpos + 1);
-        }
-    }
+	public function getEndColumn() {
+		return $this->bufcolumn[$this->bufpos];
+	}
 
-    public function getEndColumn()
-    {
-        return $this->bufcolumn[$this->bufpos];
-    }
+	public function getEndLine() {
+		return $this->bufline[$this->bufpos];
+	}
 
-    public function getEndLine()
-    {
-        return $this->bufline[$this->bufpos];
-    }
+	public function getBeginColumn() {
+		return $this->bufcolumn[$this->tokenBegin];
+	}
 
-    public function getBeginColumn()
-    {
-        return $this->bufcolumn[$this->tokenBegin];
-    }
+	public function getBeginLine() {
+		return $this->bufline[$this->tokenBegin];
+	}
 
-    public function getBeginLine()
-    {
-        return bufline[tokenBegin];
-    }
 }

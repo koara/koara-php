@@ -37,7 +37,7 @@ class Parser {
  	 * @return Document
  	 */
  	public function parseFile($resource) {
- 		$this->cs = new CharStream(fopen($resource, 'r'));
+ 		$this->cs = new CharStream($resource);
  		$this->tm = new TokenManager($this->cs);
  		$this->token = new Token();
 		$this->tree = new TreeState();

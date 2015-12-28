@@ -2,6 +2,8 @@
 
 namespace Koara;
 
+use Exception;
+
 class TokenManager
 {
     const EOF = 0;
@@ -53,7 +55,9 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                    $this->matchedKind = 0;
+                    echo "//";
+                	
+                	$this->matchedKind = 0;
                     $matchedPos = -1;
 
                     return $this->fillToken();
@@ -76,8 +80,8 @@ class TokenManager
 
     private function fillToken()
     {
-        return new Token($this->matchedKind, $this->cs.getBeginLine(), $this->cs.getBeginColumn(),
-                $this->cs.getEndLine(), $this->cs.getEndColumn(), $this->cs.getImage());
+        return new Token($this->matchedKind, $this->cs->getBeginLine(), $this->cs->getBeginColumn(),
+                $this->cs->getEndLine(), $this->cs->getEndColumn(), $this->cs->getImage());
     }
 
     private function moveStringLiteralDfa0_0()
