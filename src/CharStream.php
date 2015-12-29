@@ -37,12 +37,13 @@ class CharStream {
 			if (++$this->bufpos == $this->bufsize) {
 				$this->bufpos = 0;
 			}
-			return $this->buffer[$this->bufpos];
+			return substr($this->buffer, $this->bufpos, 1);
 		}
 		if (++$this->bufpos >= $this->maxNextCharInd) {
 			$this->fillBuff();
 		}
-		$c = $this->buffer[$this->bufpos];
+
+		$c = substr($this->buffer, $this->bufpos, 1);
 		$this->updateLineColumn($c);
 		return $c;
 	}
@@ -61,11 +62,11 @@ class CharStream {
 		}
 		$i;
  		try {
- 			$buffer = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
- 			if($buffer == NULL) {
+ 			$this->buffer = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
+ 			if($this->buffer == NULL) {
  				throw new Exception('No more data');
  			} else {
- 				$this->maxNextCharInd += strlen($buffer);
+ 				$this->maxNextCharInd += strlen($this->buffer);
  			}
  		} catch (Exception $e) {
  			--$this->bufpos;

@@ -55,8 +55,6 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                    echo "//";
-                	
                 	$this->matchedKind = 0;
                     $matchedPos = -1;
 

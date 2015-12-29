@@ -2474,6 +2474,9 @@ class Parser {
 			$this->token = $this->token->next = $this->tm->getNextToken();
 		}
 		$this->nextTokenKind = -1;
+		
+		//echo "''".$this->token	;
+		
 		if ($this->token->kind == $kind) {
 			return token;
 		}
