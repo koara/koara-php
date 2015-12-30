@@ -13,7 +13,7 @@ class Token
     public $next;
     public $specialToken;
 
-    public function __construct($kind = null, $beginLine = null, $beginColumn = null, $endLine = null, $endColumn = null, $image = null)
+    public function __construct($kind = 0, $beginLine = 0, $beginColumn = 0, $endLine = 0, $endColumn = 0, $image = NULL)
     {
         $this->kind = $kind;
         $this->beginLine = $beginLine;

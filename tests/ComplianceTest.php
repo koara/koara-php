@@ -27,8 +27,6 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provider
 	 */
 	public function testAdd($module, $testcase) {
-//  		$text = file_get_contents(dirname(__FILE__)."/spec/".$module."/$testcase.kd");
-//  		$text = mb_convert_encoding($text, 'UTF-8', mb_detect_encoding($text, 'UTF-8, ISO-8859-1', true));
  		$html = file_get_contents(dirname(__FILE__)."/spec/".$module."/$testcase.htm");
  		$html = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html, 'UTF-8, ISO-8859-1', true));
 		 
@@ -37,7 +35,7 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
  		
  		$renderer = new Html5Renderer();
  		$document->accept($renderer);
-	
+
  		$this->assertEquals($html, $renderer->getOutput());
 	}
 

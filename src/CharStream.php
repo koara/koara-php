@@ -31,7 +31,7 @@ class CharStream {
 		return $c;
 	}
 
-	protected function readChar() {
+	public function readChar() {
 		if ($this->inBuf > 0) {
 			--$inBuf;
 			if (++$this->bufpos == $this->bufsize) {
@@ -60,7 +60,6 @@ class CharStream {
 				$this->available = $this->bufsize;
 			}
 		}
-		$i;
  		try {
  			$this->buffer = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
  			if($this->buffer == NULL) {
@@ -78,7 +77,7 @@ class CharStream {
 		}
  	}
 
-	protected function backup($amount) {
+	public function backup($amount) {
 		$this->inBuf += $amount;
 		if (($this->bufpos -= $amount) < 0) {
 			$this->bufpos += $this->bufsize;
@@ -106,7 +105,7 @@ class CharStream {
 
 	public function getImage() {
 		if ($this->bufpos >= $this->tokenBegin) {
-			return substr ($this->buffer, $this->tokenBegin, $this->pos - $this->tokenBegin + 1);
+			return substr($this->buffer, $this->tokenBegin, $this->bufpos - $this->tokenBegin + 1);
  		} else {
  			return substr($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin).substr($this->buffer, 0, $this->bufpos + 1);
  		}

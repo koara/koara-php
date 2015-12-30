@@ -52,13 +52,12 @@ class TreeState
     private function popNode()
     {
         --$this->nodesOnStack;
-
         return array_pop($this->nodes);
     }
 
     private function pushNode(Node $n)
     {
-        $nodes[] = $n;
+        $this->nodes[] = $n;
         ++$this->nodesOnStack;
     }
 }
