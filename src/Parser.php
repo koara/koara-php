@@ -45,27 +45,25 @@ class Parser {
  		$this->token = new Token();
 		$this->tree = new TreeState();
  		$this->nextTokenKind = -1;
- 		
- 		//echo "@@".gettype($this->tm->getNextToken()->image);
-		
+	
  		$document = new Document(); 		
- 		$this->tree->openScope();
- 		do {
+ 		$this->tree->openScope();	 		
+ 		while ($this->getNextTokenKind() == TokenManager::EOL) {
  			$this->consumeToken(TokenManager::EOL);
- 		} while ($this->getNextTokenKind() == TokenManager::EOL);
+ 		}
  		$this->whiteSpace();
  		if ($this->hasAnyBlockElementsAhead()) {
  			$this->blockElement();
  			while ($this->blockAhead(0)) {
- 				while (getNextTokenKind() == TokenManager::EOL) {
+ 				while ($this->getNextTokenKind() == TokenManager::EOL) {
  					$this->consumeToken(TokenManager::EOL);
  					$this->whiteSpace();			
  				}
  				$this->blockElement();
  			}
-			do {
+			while($this->getNextTokenKind() == TokenManager::EOL) {
  				$this->consumeToken(TokenManager::EOL);
- 			} while($this->getNextTokenKind() == TokenManager::EOL);
+ 			}
  			$this->whiteSpace();
  		} 
  		$this->consumeToken(TokenManager::EOF);
@@ -263,7 +261,7 @@ class Parser {
  			$this->levelWhiteSpace($beginColumn);
  		}
  		while (fencedCodeBlockHasInlineTokens()) {
- 			switch (getNextTokenKind()) {
+ 			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
 			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(CHAR_SEQUENCE)->image; break;
@@ -359,6 +357,7 @@ class Parser {
  				}
  			}
  		}
+
  		$text->setValue($s);
  		$this->tree->closeScope($text);
  	}

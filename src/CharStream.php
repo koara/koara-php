@@ -61,10 +61,11 @@ class CharStream {
 			}
 		}
  		try {
- 			$this->buffer = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
- 			if($this->buffer == NULL) {
+ 			$temp = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
+ 			if($temp == NULL) {
  				throw new Exception('No more data');
  			} else {
+ 				$this->buffer = $temp;
  				$this->maxNextCharInd += strlen($this->buffer);
  			}
  		} catch (Exception $e) {

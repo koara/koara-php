@@ -56,7 +56,7 @@ class TokenManager
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
                 	$this->matchedKind = 0;
-                    $matchedPos = -1;
+                    $this->matchedPos = -1;
                     return $this->fillToken();
                 }
                 $this->matchedKind = 0x7fffffff;
@@ -272,6 +272,7 @@ class TokenManager
                 } while ($i != $startsAt);
             } elseif (ord($this->curChar) < 128) {
                 $l = 1 << (ord($this->curChar) & 077);
+                
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
