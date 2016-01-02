@@ -45,7 +45,7 @@ class Parser {
  		$this->token = new Token();
 		$this->tree = new TreeState();
  		$this->nextTokenKind = -1;
-	
+ 		
  		$document = new Document(); 		
  		$this->tree->openScope();	 		
  		while ($this->getNextTokenKind() == TokenManager::EOL) {

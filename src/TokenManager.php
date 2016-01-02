@@ -70,6 +70,7 @@ class TokenManager
                 }
             }
         } catch (Exception $e) {
+        	echo $e;
             return;
         }
     }
@@ -110,7 +111,7 @@ class TokenManager
         $this->matchedKind = $kind;
         $this->matchedPos = $pos;
         try {
-            $this->curChar = $this->cs.readChar();
+            $this->curChar = $this->cs->readChar();
         } catch (Exception $e) {
             return pos + 1;
         }
@@ -122,7 +123,7 @@ class TokenManager
     {
         $this->matchedKind = $kind;
         $this->matchedPos = $pos;
-        return $this->pos + 1;
+        return $pos + 1;
     }
 
     private function moveStringLiteralDfa1_0($active)

@@ -33,7 +33,7 @@ class CharStream {
 
 	public function readChar() {
 		if ($this->inBuf > 0) {
-			--$inBuf;
+			--$this->inBuf;
 			if (++$this->bufpos == $this->bufsize) {
 				$this->bufpos = 0;
 			}
