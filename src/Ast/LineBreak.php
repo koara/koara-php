@@ -8,6 +8,6 @@ class LineBreak extends Node
 {
     public function accept(Renderer $renderer)
     {
-        $renderer.visitLineBreak($this);
+        $renderer->visitLineBreak($this);
     }
 }

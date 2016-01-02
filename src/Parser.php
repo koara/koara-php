@@ -3,6 +3,7 @@ namespace Koara;
 
 use Koara\Ast\Document;
 use Koara\Ast\Heading;
+use Koara\Ast\LineBreak;
 use Koara\Ast\Paragraph;
 use Koara\Ast\Text;
 use Koara\LookaheadSuccess;
@@ -45,7 +46,7 @@ class Parser {
  		$this->token = new Token();
 		$this->tree = new TreeState();
  		$this->nextTokenKind = -1;
- 		
+ 		 		
  		$document = new Document(); 		
  		$this->tree->openScope();	 		
  		while ($this->getNextTokenKind() == TokenManager::EOL) {
@@ -223,7 +224,7 @@ class Parser {
  	private function orderedListItem() {
 		$listItem = new ListItem();
  		$this->tree->openScope($listItem);
- 		$t = consumeToken(TokenManager::DIGITS);
+ 		$t = $this->consumeToken(TokenManager::DIGITS);
  		$this->consumeToken(TokenManager::DOT);
  		$this->whiteSpace();
  		if ($this->listItemHasInlineElements()) { 
@@ -248,7 +249,7 @@ class Parser {
  		$codeBlock = new CodeBlock();
  		$this->tree.openScope();
  		$s;
- 		$beginColumn = consumeToken(TokenManager::BACKTICK)->beginColumn;
+ 		$beginColumn = $this->consumeToken(TokenManager::BACKTICK)->beginColumn;
  		do {
  			$this->consumeToken(TokenManager::BACKTICK);
  		} while($this->getNextTokenKind() == TokenManager::BACKTICK);
@@ -317,7 +318,7 @@ class Parser {
  		while ($this->textAhead()) {
  			$this->lineBreak();
  			$this->whiteSpace();
- 			if(in_array(Module.BLOCKQUOTES, $this->modules)) {
+ 			if(in_array(Module::BLOCKQUOTES, $this->modules)) {
  				while ($this->getNextTokenKind() == TokenManager::GT) {
  					$this->consumeToken(TokenManager::GT);
  					$this->twhiteSpace();
@@ -352,7 +353,7 @@ class Parser {
  				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 					case TokenManager::TAB:		consumeToken(TokenManager::TAB); $s .= "    "; break;
+ 					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
  					}
  				}
  			}
@@ -981,7 +982,7 @@ class Parser {
 					return false;
 				} else if($t->kind != TokenManager::SPACE && $t->kind != TokenManager::TAB && $t->kind != TokenManager::GT && $t->kind != TokenManager::EOL) {
 					if($ordered) {
-						return (t.kind == DIGITS && getToken(i+1).kind == DOT && t.beginColumn >= listBeginColumn);
+						return (t.kind == DIGITS && $this->getToken(i+1).kind == DOT && t.beginColumn >= listBeginColumn);
 					}
 					return t.kind == DASH && t.beginColumn >= listBeginColumn;
 				}
@@ -992,7 +993,7 @@ class Parser {
 
 	private function textAhead() {
 		if($this->getToken(1)->kind == TokenManager::EOL && $this->getToken(2)->kind != TokenManager::EOL) {
-			$i = $this->skip(2, TokenMananger::SPACE, TokenManager::TAB);
+			$i = $this->skip(2, TokenManager::SPACE, TokenManager::TAB);
 			$quoteLevel = $this->newQuoteLevel($i);
 			if($quoteLevel == $this->currentQuoteLevel || !in_array(Module::BLOCKQUOTES, $this->modules)) {
 				$i = $this->skip($i, TokenManager::SPACE, TokenManager::TAB, TokenManager::GT);
@@ -1014,7 +1015,7 @@ class Parser {
 	private function newQuoteLevel($offset) {
 		$quoteLevel = 0;
 		for($i=$offset;;$i++) {
-			$t = getToken(i);
+			$t = $this->getToken($i);
 			if($t->kind == TokenManager::GT) {
 				$quoteLevel++;
 			} else if($t->kind != TokenManager::SPACE && $t->kind != TokenManager::TAB) {
