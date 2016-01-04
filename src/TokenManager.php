@@ -55,7 +55,7 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                	//echo $e;
+                	echo $e;
                 	$this->matchedKind = 0;
                     $this->matchedPos = -1;
                     return $this->fillToken();
@@ -98,7 +98,7 @@ class TokenManager
         case 62: return $this->stopAtPos(0, self::GT);
         case 73: return $this->moveStringLiteralDfa1_0(0x2000);
         case 91: return $this->stopAtPos(0, self::LBRACK);
-        case 92: echo "X"; return $this->startNfaWithStates(0, self::BACKSLASH, 7);
+        case 92: return $this->startNfaWithStates(0, self::BACKSLASH, 7);
         case 93: return $this->stopAtPos(0, self::RBRACK);
         case 95: return $this->stopAtPos(0, self::UNDERSCORE);
         case 96: return $this->stopAtPos(0, self::BACKTICK);
@@ -115,7 +115,7 @@ class TokenManager
             $this->curChar = $this->cs->readChar();
         } catch (Exception $e) {
         	echo $e;
-            return pos + 1;
+            return $pos + 1;
         }
 
         return $this->moveNfa($state, $pos + 1);
@@ -195,7 +195,7 @@ class TokenManager
                 $this->round = 0x80000001;
             }
             if (ord($this->curChar) < 64) {
-                $l = 1 << $this->curChar;
+                $l = 1 << ord($this->curChar);
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
@@ -209,7 +209,7 @@ class TokenManager
                                 $kind = 7;
                             }
                             $this->checkNAdd(1);
-                        } elseif ((0x2400 && $l) != 0) {
+                        } elseif ((0x2400 & $l) != 0) {
                             if ($kind > 9) {
                                 $kind = 9;
                             }
