@@ -55,7 +55,7 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                	echo $e;
+                	//echo $e;
                 	$this->matchedKind = 0;
                     $this->matchedPos = -1;
                     return $this->fillToken();
@@ -117,7 +117,6 @@ class TokenManager
         	echo $e;
             return $pos + 1;
         }
-
         return $this->moveNfa($state, $pos + 1);
     }
 
@@ -358,7 +357,7 @@ class TokenManager
 
     private function checkNAdd($state)
     {
-        if ($this->jjrounds[$state] != $this->round) {
+        if (!array_key_exists($state, $this->jjstateSet) || $this->jjrounds[$state] != $this->round) { // HUH?
             $this->jjstateSet[$this->jjnewStateCnt++] = $state;
             $this->jjrounds[$state] = $this->round;
         }
