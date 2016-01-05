@@ -71,7 +71,7 @@ class TokenManager
                 }
             }
         } catch (Exception $e) {
-        	echo $e;
+        	//echo $e;
             return;
         }
     }
@@ -114,7 +114,7 @@ class TokenManager
         try {
             $this->curChar = $this->cs->readChar();
         } catch (Exception $e) {
-        	echo $e;
+        	//echo $e;
             return $pos + 1;
         }
         return $this->moveNfa($state, $pos + 1);
@@ -332,8 +332,7 @@ class TokenManager
             try {
                 $this->curChar = $this->cs->readChar();
             } catch (Exception $e) {
-            	echo $e;
-            	 
+            	//echo $e;
                 return $curPos;
             }
         }
