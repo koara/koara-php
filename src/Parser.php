@@ -55,7 +55,7 @@ class Parser {
  		}
  		$this->whiteSpace();
  		if ($this->hasAnyBlockElementsAhead()) {
- 			$this->blockElement();
+ 			$this->blockElement(); 			
  			while ($this->blockAhead(0)) {
  				while ($this->getNextTokenKind() == TokenManager::EOL) {
  					$this->consumeToken(TokenManager::EOL);
@@ -93,12 +93,12 @@ class Parser {
 	
  	private function heading() {
  		$heading = new Heading();
- 		$this->tree.openScope();
+ 		$this->tree->openScope();
  		$headingLevel = 0;
 
  		while($this->getNextTokenKind() == TokenManager::EQ) {
  			$this->consumeToken(TokenManager::EQ);
- 			$this->headingLevel++;
+ 			$headingLevel++;
  		}
  		$this->whiteSpace();
  	    while ($this->headingHasInlineElementsAhead()) {
@@ -118,7 +118,7 @@ class Parser {
 				$this->looseChar();
  			}
  		}
- 		$heading.setValue($headingLevel);
+ 		$heading->setValue($headingLevel);
  		$this->tree->closeScope($heading);
  	}
 	
@@ -343,7 +343,7 @@ class Parser {
 			case TokenManager::DIGITS: 			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
 			case TokenManager::DOT: 			$s .= $this->consumeToken(TokenManager::DOT)->image; break;
 			case TokenManager::EQ: 				$s .= $this->consumeToken(TokenManager::EQ)->image; break;
-			case TokenManager::ESCAPED_CHAR:	$s .= substr($this->consumeToken(TokenManager::ESCAPED_CHAR)->image, 1); break;
+			case TokenManager::ESCAPED_CHAR:	$s .= mb_substr($this->consumeToken(TokenManager::ESCAPED_CHAR)->image, 1); break;
 			case TokenManager::GT: 				$s .= $this->consumeToken(TokenManager::GT)->image; break;
 			case TokenManager::IMAGE_LABEL: 	$s .= $this->consumeToken(TokenManager::IMAGE_LABEL)->image; break;
 			case TokenManager::LPAREN: 			$s .= $this->consumeToken(TokenManager::LPAREN)->image; break;
@@ -612,7 +612,7 @@ class Parser {
  			case TokenManager::DIGITS:			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
  			case TokenManager::DOT:				$s .= $this->consumeToken(TokenManager::DOT)->image; break;
  			case TokenManager::EQ:				$s .= $this->consumeToken(TokenManager::EQ)->image; break;
- 			case TokenManager::ESCAPED_CHAR:	$s .= substr($this->consumeToken(TokenManager::ESCAPED_CHAR)->image, 1); break;
+ 			case TokenManager::ESCAPED_CHAR:	$s .= mb_substr($this->consumeToken(TokenManager::ESCAPED_CHAR)->image, 1); break;
  			case TokenManager::IMAGE_LABEL:		$s .= $this->consumeToken(TokenManager::IMAGE_LABEL)->image; break;
  			case TokenManager::GT:				$s .= $this->consumeToken(TokenManager::GT)->image; break;
  			case TokenManager::LPAREN:			$s .= $this->consumeToken(TokenManager::LPAREN)->image; break;
@@ -653,7 +653,7 @@ class Parser {
  			case TokenManager::DIGITS:			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
  			case TokenManager::DOT:				$s .= $this->consumeToken(TokenManager::DOT)->image; break;
  			case TokenManager::EQ:				$s .= $this->consumeToken(TokenManager::EQ)->image; break;
- 			case TokenManager::ESCAPED_CHAR:	$s .= substr($this->consumeToken(TokenManager::ESCAPED_CHAR)->image, 1); break;
+ 			case TokenManager::ESCAPED_CHAR:	$s .= mb_substr($this->consumeToken(TokenManager::ESCAPED_CHAR)->image, 1); break;
  			case TokenManager::IMAGE_LABEL:		$s .= $this->consumeToken(TokenManager::IMAGE_LABEL)->image; break;
  			case TokenManager::GT:				$s .= $this->consumeToken(TokenManager::GT)->image; break;
  			case TokenManager::LBRACK:			$s .= $this->consumeToken(TokenManager::LBRACK)->image; break;

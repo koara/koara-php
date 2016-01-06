@@ -12,7 +12,7 @@ class Html5Renderer implements Renderer
     /**
      * @var int
      */
-    private $level;
+    private $level = 0;
 
     /**
      * @var int[]
@@ -172,7 +172,7 @@ class Html5Renderer implements Renderer
     public function escape($text)
     {
         return str_replace(
-          array('&', '<', '>', '\''),
+          array('&', '<', '>', '"'),
           array('&amp;', '&lt;', '&gt;', '&quot;'),
           $text
         );

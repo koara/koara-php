@@ -21,7 +21,7 @@ class TreeState
 
     public function openScope()
     {
-        $marks[] = $this->currentMark;
+        $this->marks[] = $this->currentMark;
         $this->currentMark = $this->nodesOnStack;
     }
 
@@ -52,11 +52,11 @@ class TreeState
     private function popNode()
     {
         --$this->nodesOnStack;
-        return array_pop($this->nodes);
+       return array_pop($this->nodes);
     }
 
     private function pushNode(Node $n)
-    {
+    {    	
         $this->nodes[] = $n;
         ++$this->nodesOnStack;
     }

@@ -37,13 +37,13 @@ class CharStream {
 			if (++$this->bufpos == $this->bufsize) {
 				$this->bufpos = 0;
 			}
-			return substr($this->buffer, $this->bufpos, 1);
+			return mb_substr($this->buffer, $this->bufpos, 1);
 		}
 		if (++$this->bufpos >= $this->maxNextCharInd) {
 			$this->fillBuff();
 		}
-
-		$c = substr($this->buffer, $this->bufpos, 1);
+		
+		$c = mb_substr($this->buffer, $this->bufpos, 1);
 		$this->updateLineColumn($c);
 		return $c;
 	}
@@ -66,7 +66,7 @@ class CharStream {
  				throw new Exception('No more data');
  			} else {
  				$this->buffer = $temp;
- 				$this->maxNextCharInd += strlen($this->buffer);
+ 				$this->maxNextCharInd += mb_strlen($this->buffer); 				
  			}
  		} catch (Exception $e) {
  			--$this->bufpos;
@@ -106,26 +106,26 @@ class CharStream {
 
 	public function getImage() {
 		if ($this->bufpos >= $this->tokenBegin) {
-			return substr($this->buffer, $this->tokenBegin, $this->bufpos - $this->tokenBegin + 1);
+			return mb_substr($this->buffer, $this->tokenBegin, $this->bufpos - $this->tokenBegin + 1);
  		} else {
- 			return substr($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin).substr($this->buffer, 0, $this->bufpos + 1);
+ 			return mb_substr($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin).mb_substr($this->buffer, 0, $this->bufpos + 1);
  		}
  	}
 
 	public function getEndColumn() {
-		return $this->bufcolumn[$this->bufpos];
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufcolumn[$this->bufpos] : 0;
 	}
 
 	public function getEndLine() {
-		return $this->bufline[$this->bufpos];
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufline[$this->bufpos] : 0;
 	}
 
 	public function getBeginColumn() {
-		return $this->bufcolumn[$this->tokenBegin];
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufcolumn[$this->tokenBegin] : 0;
 	}
 
 	public function getBeginLine() {
-		return $this->bufline[$this->tokenBegin];
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufline[$this->tokenBegin] : 0;
 	}
 
 }

@@ -37,7 +37,7 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
  		$document->accept($renderer);
  		
   		//echo var_dump($document);
-
+  		
  		$this->assertEquals($html, $renderer->getOutput());
 	}
 
