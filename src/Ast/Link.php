@@ -8,6 +8,6 @@ class Link extends Node
 {
     public function accept(Renderer $renderer)
     {
-        $renderer.visitLink($this);
+        $renderer->visitLink($this);
     }
 }

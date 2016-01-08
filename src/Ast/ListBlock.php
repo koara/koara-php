@@ -18,11 +18,11 @@ class ListBlock extends BlockElement
 
     public function isOrdered()
     {
-        return ordered;
+        return $this->ordered;
     }
 
     public function accept(Renderer $renderer)
     {
-        $renderer.visitListblock($this);
+        $renderer->visitListblock($this);
     }
 }

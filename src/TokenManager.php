@@ -34,8 +34,6 @@ class TokenManager
     private $jjrounds = array(8);
     private $jjstateSet = array(16);
     private $curChar;
-    private $jjbitVec0 = array(0xfffffffffffffffe, 0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff);
-    private $jjbitVec2 = array(0x0, 0x0, 0xffffffffffffffff, 0xffffffffffffffff);
     private $jjnextStates = array('2', '3', '5');
     private $jjnewStateCnt;
     private $round;
@@ -63,6 +61,7 @@ class TokenManager
                 $this->matchedKind = 0x7fffffff;
                 $this->matchedPos = 0;
                 $curPos = $this->moveStringLiteralDfa0_0();
+
                 if ($this->matchedKind != 0x7fffffff) {
                     if ($this->matchedPos + 1 < $curPos) {
                         $this->cs->backup($curPos - $this->matchedPos - 1);
@@ -193,6 +192,7 @@ class TokenManager
             if (++$this->round == 0x7fffffff) {
                 $this->round = 0x80000001;
             }
+
             if ($this->ordutf8($this->curChar) < 64) {
                 $l = 1 << $this->ordutf8($this->curChar);
                 do {
@@ -274,7 +274,6 @@ class TokenManager
                 } while ($i != $startsAt);
             } elseif ($this->ordutf8($this->curChar) < 128) {
                 $l = 1 << ($this->ordutf8($this->curChar) & 077);
-                
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
@@ -301,23 +300,16 @@ class TokenManager
                     }
                 } while ($i != $startsAt);
             } else {
-                $hiByte = ($this->ordutf8($this->curChar) >> 8);
-                
-                $i1 = $hiByte >> 6;
-                $l1 = 1 << ($hiByte & 077);
-                $i2 = ($this->ordutf8($this->curChar) & 0xff) >> 6;
-                $l2 = 1 << ($this->ordutf8($this->curChar) & 077);
-                
                 do {
+                	
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
                     case 0:
-                        if ($this->canMove($hiByte, $i1, $i2, $l1, $l2)) {
-                            if ($kind > 4) {
-                                $kind = 4;
-                            }
-                            $this->checkNAdd(0);
+                       
+                        if ($kind > 4) {
+                             $kind = 4;
                         }
+                        $this->checkNAdd(0);
                         break;
                     }
                 } while ($i != $startsAt);
@@ -328,25 +320,18 @@ class TokenManager
                 $kind = 0x7fffffff;
             }
             ++$curPos;
+            
             if (($i = $this->jjnewStateCnt) == ($startsAt = 8 - ($this->jjnewStateCnt = $startsAt))) {
                 return $curPos;
             }
             try {
                 $this->curChar = $this->cs->readChar();
             } catch (Exception $e) {
+            echo "ERROR";
             	echo $e;
                 return $curPos;
             }
         }
-    }
-
-    private function canMove($hiByte, $i1, $i2, $l1, $l2)
-    {
-        if ($hiByte == 0) {
-            return ($this->jjbitVec2[$i2] & $l2) != 0;
-        }
-
-        return ($this->jjbitVec0[$i1] & $l1) != 0;
     }
 
     private function checkNAddStates($start, $end)

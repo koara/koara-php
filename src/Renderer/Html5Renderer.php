@@ -54,14 +54,14 @@ class Html5Renderer implements Renderer
         $this->listSequence[] = 0;
         $tag = $node->isOrdered() ? 'ol' : 'ul';
         $this->out .= $this->indent().'<'.$tag.">\n";
-        ++$level;
+        ++$this->level;
         $node->childrenAccept($this);
-        --$level;
-        $this->out .= $this->indent().'</'.tag.">\n";
+        --$this->level;
+        $this->out .= $this->indent().'</'.$tag.">\n";
         if (!$node->isNested()) {
             $this->out .= "\n";
         }
-        array_pop($listSequence);
+        array_pop($this->listSequence);
     }
 
     public function visitListItem($node)

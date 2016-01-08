@@ -3,9 +3,14 @@ namespace Koara;
 
 use Koara\Ast\Document;
 use Koara\Ast\Heading;
+use Koara\Ast\ListBlock;
+use Koara\Ast\ListItem;
 use Koara\Ast\LineBreak;
 use Koara\Ast\Paragraph;
 use Koara\Ast\Text;
+use Koara\Ast\Link;
+use Koara\Io\FileReader;
+use Koara\Io\Reader;
 use Koara\LookaheadSuccess;
 
 class Parser {
@@ -33,15 +38,25 @@ class Parser {
  		);
  	}
  	
-// 	public Document parse(String text) {
-// 		return parse(new StringReader(text));
-// 	}
+ 	/**
+ 	 * @return Document
+ 	 */
+	public function parse($text) {
+		return $this->parserReader(new StringReader(text));
+	}
+
+	/**
+	 * @return Document
+	 */
+	public function parseFile($fileName) {
+		return $this->parserReader(new FileReader($fileName));
+	}
 	
  	/**
  	 * @return Document
  	 */
- 	public function parseFile($resource) {
- 		$this->cs = new CharStream($resource);
+ 	private function parserReader(Reader $reader) {
+ 		$this->cs = new CharStream($reader);
  		$this->tm = new TokenManager($this->cs);
  		$this->token = new Token();
 		$this->tree = new TreeState();
@@ -241,7 +256,7 @@ class Parser {
  				$this->blockElement();
  			}
  		}
- 		$listItem->setNumber(intval(t.image));
+ 		$listItem->setNumber(intval($t->image));
  		$this->tree->closeScope($listItem);
  		return $t->beginColumn;
  	}
@@ -602,7 +617,7 @@ class Parser {
  	private function resourceText() {
  		$text = new Text();
  		$this->tree->openScope();
-		$s;
+		$s="";
  		do {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::BACKSLASH:		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
@@ -628,20 +643,20 @@ class Parser {
  			}
  		} while($this->resourceHasElementAhead());
  		$text->setValue($s);
- 		tree.closeScope(text);
+ 		$this->tree->closeScope($text);
  	}
 
  	private function resourceUrl() {
  		$this->consumeToken(TokenManager::LPAREN);
  		$this->whiteSpace();
- 		$ref = resourceUrlText();
+ 		$ref = $this->resourceUrlText();
  		$this->whiteSpace();
  		$this->consumeToken(TokenManager::RPAREN);
  		return $ref;
  	}
 
  	private function resourceUrlText() {
- 		$s;
+ 		$s="";
  		while ($this->resourceTextHasElementsAhead()) {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
@@ -918,7 +933,7 @@ class Parser {
 	          		return false;
 	        	}
     		} while($t->kind == TokenManager::EOL);
-    			return $t->kind != TokenManager::EOF && ($this->currentBlockLevel == 0 || $t->beginColumn >= $this->blockBeginColumn + 2) ;
+    			return $t->kind != TokenManager::EOF && ($this->currentBlockLevel == 0 || $t->beginColumn >= $blockBeginColumn + 2) ;
   			}
 		return false;
  	}
@@ -1036,7 +1051,7 @@ class Parser {
 		$this->lookAhead = 2;
 		$this->lastPosition = $this->scanPosition = $this->token;
  		try {
- 			return !$this->scanToken(TokenManager::DIGITS) && !scanToken(TokenManager::DOT);
+ 			return !$this->scanToken(TokenManager::DIGITS) && !$this->scanToken(TokenManager::DOT);
  		} catch (LookaheadSuccess $ls) {
 			return true;
 		}
@@ -1129,7 +1144,7 @@ class Parser {
 		$this->lookAhead = 2147483647;
 		$this->lastPosition = $this->scanPosition = $this->token;
 		try {
-			return !scanEm();
+			return !$this->scanEm();
 		} catch (LookaheadSuccess $ls) {
 			return true;
 		}
@@ -1139,7 +1154,7 @@ class Parser {
 		$this->lookAhead = 2147483647;
 		$this->lastPosition = $this->scanPosition = $this->token;
 		try {
-			return !scanCode();
+			return !$this->scanCode();
 		} catch (LookaheadSuccess $ls) {
 			return true;
 		}
@@ -2157,7 +2172,7 @@ class Parser {
 	}
 
 	private function scanImage() {
-		if ($this->scanToken(TokenManager::LBRACK) || $this->scanWhitspaceTokens() || $this->scanToken(IMAGE_LABEL) || $this->scanImageElement()) {
+		if ($this->scanToken(TokenManager::LBRACK) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::IMAGE_LABEL) || $this->scanImageElement()) {
 			return true;
 		}
 		$xsp;
