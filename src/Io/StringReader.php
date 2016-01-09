@@ -2,31 +2,27 @@
 
 namespace Koara\Io;
 
-class StringReader extends Reader
+class StringReader implements Reader
 {
-
-	private $index;
+	
 	private $text;
-
-	public function __construct($text)
+	private $index;
+	
+	public function __construct($text) 
 	{
 		$this->text = $text;
 	}
-
-	public function read(&$buffer, $offset, $length)
-	{		
-		if($this->index < mb_strlen($this->text)) {
-			$temp = mb_substr($this->text, $this->index, $length, "utf-8");
-			for($i= 0; $i < $length; $i++) {
-				if($i < mb_strlen($temp)) {
-					$buffer[$offset + $i] = mb_substr($temp, $i, 1);
-				} 
-			}
-			$this->index += $length;
-			return mb_strlen($temp);
-		} else {
-			return -1;
-		}
-	}
 	
+    public function read(&$buffer, $offset, $length) {
+    	if ($this->text !== false && mb_strlen(mb_substr($this->text, $this->index)) > 0) {
+    		for($i=0; $i < $length; $i++) {
+     			$c = mb_substr($this->text, $this->index + $i, 1);
+     			$buffer[$offset + $i] = $c;
+    		}
+    		$this->index += $length;
+    		return true;
+    	}
+    	return false;
+    }
+
 }

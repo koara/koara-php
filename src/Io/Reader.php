@@ -2,9 +2,9 @@
 
 namespace Koara\Io;
 
-abstract class Reader
+interface Reader
 {
-
-	abstract public function read(&$buffer, $offset, $length);
 	
+    public function read(&$buffer, $offset, $length);
+
 }
