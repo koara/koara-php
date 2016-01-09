@@ -61,18 +61,14 @@ class CharStream {
 			}
 		}
  		try {
- 			$temp = file_get_contents($this->resource, false, null, $this->maxNextCharInd, $this->available - $this->maxNextCharInd);
- 			
- 			$temp = mb_convert_encoding($temp, 'UTF-8', mb_detect_encoding($temp, 'UTF-8, ISO-8859-1', true));
- 			
- 			if($temp == NULL) {
- 				echo "X";
- 				throw new Exception('No more data');
+ 			$i = 0;
+ 			if (($i = $this->reader->read($this->buffer, $this->maxNextCharInd, $this->available - $this->maxNextCharInd)) == -1) {
+ 				throw new IOException();
  			} else {
- 				echo "A";
- 				$this->buffer = $temp;
- 				$this->maxNextCharInd += mb_strlen($this->buffer); 				
+ 				$this->maxNextCharInd += $i;
  			}
+ 			
+ 			
  		} catch (Exception $e) {
  			--$this->bufpos;
  			$this->backup(0);
@@ -83,8 +79,6 @@ class CharStream {
 		}
  	}
  	
-
-
 	public function backup($amount) {
 		$this->inBuf += $amount;
 		if (($this->bufpos -= $amount) < 0) {

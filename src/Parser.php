@@ -42,7 +42,7 @@ class Parser {
  	 * @return Document
  	 */
 	public function parse($text) {
-		return $this->parserReader(new StringReader(text));
+		return $this->parserReader(new StringReader($text));
 	}
 
 	/**
@@ -52,24 +52,21 @@ class Parser {
 		return $this->parserReader(new FileReader($fileName));
 	}
 	
- 	/**
- 	 * @return Document
- 	 */
  	private function parserReader(Reader $reader) {
- 		$this->cs = new CharStream($reader);
- 		$this->tm = new TokenManager($this->cs);
- 		$this->token = new Token();
-		$this->tree = new TreeState();
- 		$this->nextTokenKind = -1;
+  		$this->cs = new CharStream($reader);
+  		$this->tm = new TokenManager($this->cs);
+  		$this->token = new Token();
+ 		$this->tree = new TreeState();
+  		$this->nextTokenKind = -1;
  		 		
- 		$document = new Document(); 		
- 		$this->tree->openScope();	 		
+  		$document = new Document(); 		
+  		$this->tree->openScope();	 		
  			
- 		while ($this->getNextTokenKind() == TokenManager::EOL) {
- 			$this->consumeToken(TokenManager::EOL);
- 		}
- 		$this->whiteSpace();
- 		if ($this->hasAnyBlockElementsAhead()) {
+  		while ($this->getNextTokenKind() == TokenManager::EOL) {
+  			$this->consumeToken(TokenManager::EOL);
+  		}
+  		$this->whiteSpace();
+  		if ($this->hasAnyBlockElementsAhead()) {
  			$this->blockElement(); 			
  			while ($this->blockAhead(0)) {
  				while ($this->getNextTokenKind() == TokenManager::EOL) {
