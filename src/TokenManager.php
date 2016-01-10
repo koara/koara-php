@@ -53,7 +53,7 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                	//echo $e;
+                	echo $e;
                 	$this->matchedKind = 0;
                     $this->matchedPos = -1;
                     return $this->fillToken();
@@ -136,11 +136,11 @@ class TokenManager
         return $this->startNfa(0, $active);
     }
 
-    private function moveStringLiteralDfa2_0(long $old, long $active)
+    private function moveStringLiteralDfa2_0($old, $active)
     {
-        $this->curChar = $this->cs.readChar();
+        $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar == 65) || $this->ordutf8($this->curChar) == 97) {
-            return moveStringLiteralDfa3_0($active, 0x2000);
+            return $this->moveStringLiteralDfa3_0($active, 0x2000);
         }
 
         return startNfa(1, $active);
@@ -150,7 +150,7 @@ class TokenManager
     {
         $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar) == 71 || $this->ordutf8($this->curChar) == 103) {
-            return $this->moveStringLiteralDfa4_0(active, 0x2000);
+            return $this->moveStringLiteralDfa4_0($active, 0x2000);
         }
 
         return $this->startNfa(2, $active);
@@ -159,7 +159,7 @@ class TokenManager
     private function moveStringLiteralDfa4_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8(curChar == 69) || $this->ordutf8(curChar == 101)) {
+        if ($this->ordutf8($this->curChar == 69) || $this->ordutf8($this->curChar == 101)) {
             return $this->moveStringLiteralDfa5_0($active, 0x2000);
         }
 
@@ -327,7 +327,6 @@ class TokenManager
             try {
                 $this->curChar = $this->cs->readChar();
             } catch (Exception $e) {
-            echo "ERROR";
             	echo $e;
                 return $curPos;
             }
@@ -343,7 +342,7 @@ class TokenManager
 
     private function checkNAdd($state)
     {
-        if (!array_key_exists($state, $this->jjstateSet) || $this->jjrounds[$state] != $this->round) { 
+        if (!array_key_exists($state, $this->jjrounds) || $this->jjrounds[$state] != $this->round) { 
             $this->jjstateSet[$this->jjnewStateCnt++] = $state;
             $this->jjrounds[$state] = $this->round;
         }

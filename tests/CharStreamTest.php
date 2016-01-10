@@ -3,7 +3,7 @@ namespace Koara;
 
 use Koara\Io\StringReader;
 
-class StringReaderTest extends \PHPUnit_Framework_TestCase {
+class CharStreamTest extends \PHPUnit_Framework_TestCase {
 
  	private $cs;
 	

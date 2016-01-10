@@ -536,7 +536,7 @@ class Parser {
  		case TokenManager::ASTERISK:		$text->setValue($this->consumeToken(TokenManager::ASTERISK)->image); break;
  		case TokenManager::BACKTICK:		$text->setValue($this->consumeToken(TokenManager::BACKTICK)->image); break;
  		case TokenManager::LBRACK:			$text->setValue($this->consumeToken(TokenManager::LBRACK)->image); break;
- 		case TokenManger::UNDERSCORE:		$text->setValue($this->consumeToken(TokenManager::UNDERSCORE)->image); break;		
+ 		case TokenManager::UNDERSCORE:		$text->setValue($this->consumeToken(TokenManager::UNDERSCORE)->image); break;		
  		}
  		$this->tree->closeScope($text);
  	}
@@ -957,7 +957,7 @@ class Parser {
 					} else {
 						return false;
 					}
-				} else if(t.kind == EOF) {
+				} else if($t->kind == TokenManager::EOF) {
 					return false;
 				}
 			}

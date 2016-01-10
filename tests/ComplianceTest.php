@@ -33,12 +33,12 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	  		$parser = new Parser();
 	  		$document = $parser->parseFile(dirname(__FILE__)."/resources/spec/".$module."/$testcase.kd");
  		
-//  		$renderer = new Html5Renderer();
-//  		$document->accept($renderer);
- 		
-//   		//echo var_dump($document);
-  		
-//  		$this->assertEquals($html, $renderer->getOutput());
+	 		$renderer = new Html5Renderer();
+	 		$document->accept($renderer);
+	 		
+
+	 		
+	 		$this->assertEquals($html, $renderer->getOutput());
 	}
 
 }

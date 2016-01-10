@@ -114,20 +114,21 @@ class CharStream {
         }
     }
 
-    public function getEndColumn() {
-        return $this->bufcolumn[$this->bufpos];
-    }
+public function getEndColumn() {
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufcolumn[$this->bufpos] : 0;
+	}
 
-    public function getEndLine() {
-        return $this->bufline[$this->bufpos];
-    }
+	public function getEndLine() {
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufline[$this->bufpos] : 0;
+	}
 
-    public function getBeginColumn() {
-        return $this->bufcolumn[$this->tokenBegin];
-    }
+	public function getBeginColumn() {
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufcolumn[$this->tokenBegin] : 0;
+	}
 
-    public function getBeginLine() {
-        return $this->bufline[$this->tokenBegin];
-    }
+	public function getBeginLine() {
+		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufline[$this->tokenBegin] : 0;
+	}
+    
 
 }
