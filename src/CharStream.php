@@ -63,7 +63,7 @@ class CharStream {
  		try {
  			$i = 0;
  			if (($i = $this->reader->read($this->buffer, $this->maxNextCharInd, $this->available - $this->maxNextCharInd)) == -1) {
- 				throw new IOException();
+ 				throw new Exception();
  			} else {
  				$this->maxNextCharInd += $i;
  			}

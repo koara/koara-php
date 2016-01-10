@@ -15,14 +15,18 @@ class StringReader implements Reader
 	
     public function read(&$buffer, $offset, $length) {
     	if ($this->text !== false && mb_strlen(mb_substr($this->text, $this->index)) > 0) {
+    		$charactersRead=0;
     		for($i=0; $i < $length; $i++) {
      			$c = mb_substr($this->text, $this->index + $i, 1);
-     			$buffer[$offset + $i] = $c;
+     			if($c != NULL) {
+	     			$buffer[$offset + $i] = $c;
+	     			$charactersRead++;
+     			}
     		}
     		$this->index += $length;
-    		return true;
+    		return $charactersRead;
     	}
-    	return false;
+    	return -1;
     }
 
 }
