@@ -67,23 +67,23 @@ class Html5Renderer implements Renderer
     public function visitListItem($node)
     {
         $seq = end($this->listSequence) + 1;
-        $this->listSequence[$this->listSequence.size() - 1] = $seq;
+        $this->listSequence[count($this->listSequence) - 1] = $seq;
         $this->out .= $this->indent().'<li';
         if ($node->getNumber() != null && ($seq != $node->getNumber())) {
             $this->out .= ' value="'.$node->getNumber().'"';
-            $this->listSequence[] = $node.getNumber();
+            $this->listSequence[] = $node->getNumber();
         }
         $this->out .= '>';
         if ($node->getChildren() != null) {
-            $block = $this->node.getChildren()[0] instanceof Paragraph || $this->node.getChildren()[0] instanceof BlockElement;
-            if (sizeof($node.getChildren()) > 1 || !$block) {
+            $block = $node->getChildren()[0] instanceof Paragraph || $node->getChildren()[0] instanceof BlockElement;
+            if (sizeof($node->getChildren()) > 1 || !$block) {
                 $this->out .= "\n";
             }
-            ++$level;
-            $node->childrenAccept(this);
-            --$level;
+            ++$this->level;
+            $node->childrenAccept($this);
+            --$this->level;
             if (sizeof($node->getChildren()) > 1 || !$block) {
-                $this->out .= indent();
+                $this->out .= $this->indent();
             }
         }
         $this->out .= "</li>\n";

@@ -23,6 +23,6 @@ class ListItem extends Node
 
     public function accept(Renderer $renderer)
     {
-        $renderer->visitLink($this);
+        $renderer->visitListItem($this);
     }
 }

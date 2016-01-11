@@ -182,6 +182,7 @@ class Parser {
  		$list = new ListBlock(false);
  		$this->tree->openScope();
  		$listBeginColumn = $this->unorderedListItem();
+ 		
  		while ($this->listItemAhead($listBeginColumn, false)) {
  			while ($this->getNextTokenKind() == TokenManager::EOL) {
  				$this->consumeToken(TokenManager::EOL);
