@@ -91,12 +91,12 @@ class CharStream {
             $this->column = 1;
             $this->line += $this->column;
         }
-
-        switch ($c) {
-        case '\n':
+        
+        switch (ord($c)) {
+        case 10:
             $this->prevCharIsLF = true;
             break;
-        case '\t':
+        case 9:
             $this->column--;
             $this->column += ($this->tabSize - ($this->column % $this->tabSize));
             break;
@@ -114,8 +114,8 @@ class CharStream {
         }
     }
 
-public function getEndColumn() {
-		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufcolumn[$this->bufpos] : 0;
+	public function getEndColumn() {
+		return array_key_exists($this->tokenBegin, $this->bufcolumn) ? $this->bufcolumn[$this->bufpos] : 0;
 	}
 
 	public function getEndLine() {
@@ -123,7 +123,7 @@ public function getEndColumn() {
 	}
 
 	public function getBeginColumn() {
-		return array_key_exists($this->tokenBegin, $this->bufline) ? $this->bufcolumn[$this->tokenBegin] : 0;
+		return array_key_exists($this->tokenBegin, $this->bufcolumn) ? $this->bufcolumn[$this->tokenBegin] : 0;
 	}
 
 	public function getBeginLine() {

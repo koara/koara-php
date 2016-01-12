@@ -53,7 +53,7 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                	echo $e;
+                	//echo $e;
                 	$this->matchedKind = 0;
                     $this->matchedPos = -1;
                     return $this->fillToken();
@@ -70,7 +70,7 @@ class TokenManager
                 }
             }
         } catch (Exception $e) {
-        	echo $e;
+        	//echo $e;
             return;
         }
     }
@@ -113,7 +113,7 @@ class TokenManager
         try {
             $this->curChar = $this->cs->readChar();
         } catch (Exception $e) {
-        	echo $e;
+        	//echo $e;
             return $pos + 1;
         }
         return $this->moveNfa($state, $pos + 1);
@@ -322,12 +322,12 @@ class TokenManager
             ++$curPos;
             
             if (($i = $this->jjnewStateCnt) == ($startsAt = 8 - ($this->jjnewStateCnt = $startsAt))) {
-                return $curPos;
+            	return $curPos;
             }
             try {
                 $this->curChar = $this->cs->readChar();
             } catch (Exception $e) {
-            	echo $e;
+            	//echo $e;
                 return $curPos;
             }
         }

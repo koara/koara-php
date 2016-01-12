@@ -202,6 +202,7 @@ class Parser {
  		$listItem = new ListItem();
  		$this->tree->openScope();
  		$t = $this->consumeToken(TokenManager::DASH);
+ 		
  		$this->whiteSpace();
  		if ($this->listItemHasInlineElements()) { 
  			$this->blockElement();
@@ -910,7 +911,6 @@ class Parser {
 	
  	 private function blockAhead($blockBeginColumn) {
  	 	$quoteLevel;
- 	 	
  	 	if($this->getToken(1)->kind == TokenManager::EOL) {
     		$t;
 			$i = 2;
@@ -933,8 +933,8 @@ class Parser {
 	          		return false;
 	        	}
     		} while($t->kind == TokenManager::EOL);
-    			return $t->kind != TokenManager::EOF && ($this->currentBlockLevel == 0 || $t->beginColumn >= $blockBeginColumn + 2) ;
-  			}
+    		return $t->kind != TokenManager::EOF && ($this->currentBlockLevel == 0 || $t->beginColumn >= $blockBeginColumn + 2) ;
+  		}
 		return false;
  	}
 
@@ -998,13 +998,13 @@ class Parser {
 					return false;
 				} else if($t->kind != TokenManager::SPACE && $t->kind != TokenManager::TAB && $t->kind != TokenManager::GT && $t->kind != TokenManager::EOL) {
 					if($ordered) {
-						return (t.kind == DIGITS && $this->getToken(i+1).kind == DOT && t.beginColumn >= listBeginColumn);
+						return (t.kind == TokenManager::DIGITS && $this->getToken(i+1).kind == DOT && $t->beginColumn >= $listBeginColumn);
 					}
-					return t.kind == DASH && t.beginColumn >= listBeginColumn;
+					return $t->kind == TokenManager::DASH && $t->beginColumn >= $listBeginColumn;
 				}
 			}
 		}
-			return false;
+		return false;
 	}
 
 	private function textAhead() {
@@ -2491,7 +2491,6 @@ class Parser {
  	private function consumeToken($kind) {
  		$old = $this->token;
 		if ($this->token->next != null) {
-			
 			$this->token = $this->token->next;
 		} else {
 			$this->token = $this->token->next = $this->tm->getNextToken();

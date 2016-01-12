@@ -2,6 +2,7 @@
 namespace Koara;
 
 use Koara\Renderer\Html5Renderer;
+use Koara\Io\FileReader;
 
 class ComplianceTest extends \PHPUnit_Framework_TestCase {
 
@@ -35,8 +36,6 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
  		
 	 		$renderer = new Html5Renderer();
 	 		$document->accept($renderer);
-	 		
-
 	 		
 	 		$this->assertEquals($html, $renderer->getOutput());
 	}
