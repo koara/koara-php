@@ -40,8 +40,8 @@ class TreeState
     public function addSingleValue(Node $n, Token $t)
     {
         $this->openScope($n);
-        $n->setValue($t->getImage());
-        $this->closeScope(n);
+        $n->setValue($t->image);
+        $this->closeScope($n);
     }
 
     private function nodeArity()

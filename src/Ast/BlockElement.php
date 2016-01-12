@@ -13,7 +13,7 @@ class BlockElement extends Node
 
     public function isSingleChild()
     {
-        return $this->getParent().getChildren().length == 1;
+        return count($this->getParent()->getChildren()) == 1;
     }
 
     public function accept(Renderer $renderer)

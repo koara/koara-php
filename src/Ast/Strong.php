@@ -8,6 +8,6 @@ class Strong extends Node
 {
     public function accept(Renderer $renderer)
     {
-        $renderer->visitString($this);
+        $renderer->visitStrong($this);
     }
 }

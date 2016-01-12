@@ -2,13 +2,15 @@
 namespace Koara;
 
 use Koara\Ast\Document;
+use Koara\Ast\Em;
 use Koara\Ast\Heading;
 use Koara\Ast\ListBlock;
 use Koara\Ast\ListItem;
 use Koara\Ast\LineBreak;
-use Koara\Ast\Paragraph;
-use Koara\Ast\Text;
 use Koara\Ast\Link;
+use Koara\Ast\Paragraph;
+use Koara\Ast\Strong;
+use Koara\Ast\Text;
 use Koara\Io\FileReader;
 use Koara\Io\Reader;
 use Koara\LookaheadSuccess;
@@ -775,7 +777,7 @@ class Parser {
  				}
  			}
  		} while($this->strongWithinEmHasElementsAhead());
- 		consumeToken(TokenManager::ASTERISK);
+ 		$this->consumeToken(TokenManager::ASTERISK);
  		$this->tree->closeScope($strong);
  	}
 
@@ -858,7 +860,7 @@ class Parser {
  				$this->image();
  			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && hasCodeAhead()) {
+ 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else {
  				switch ($this->getNextTokenKind()) {
@@ -1558,7 +1560,7 @@ class Parser {
 																			$this->lookingAhead = true;
 																			$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
 																			$this->lookingAhead = false;
-																			return (!semanticLookAhead || scanWhitspaceToken());
+																			return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
 																		}
 																	}
 																}
@@ -1738,7 +1740,7 @@ class Parser {
 						$this->scanPosition = $xsp;
 						if ($this->scanToken(TokenManager::ASTERISK)) {
 							$this->scanPosition = $xsp;
-							if ($this->scanToken(TokenMananger::BACKTICK)) {
+							if ($this->scanToken(TokenManager::BACKTICK)) {
 								$this->scanPosition = $xsp;
 								return $this->scanToken(TokenManager::LBRACK);
 							}
@@ -1824,7 +1826,7 @@ class Parser {
 							$this->scanPosition = $xsp;
 							if ($this->scanToken(TokenManager::LBRACK)) {
 								$this->scanPosition = $xsp;
-								return scanToken(TokenManager::UNDERSCORE);
+								return $this->scanToken(TokenManager::UNDERSCORE);
 							}
 						}
 					}

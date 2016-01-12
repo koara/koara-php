@@ -2,6 +2,10 @@
 
 namespace Koara\Renderer;
 
+use Koara\Ast\BlockElement;
+use Koara\Ast\ListItem;
+use Koara\Ast\Paragraph;
+
 class Html5Renderer implements Renderer
 {
     /**
