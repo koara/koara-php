@@ -191,8 +191,8 @@ class Html5Renderer implements Renderer
     public function escapeUrl($text)
     {
         return str_replace(
-          array('"', '`', '<', '>', '[', ']', '\\'),
-          array('%22', '%60', '%3C', '%3E', '%5B', '%5D', '%5C'),
+          array(' ', '"', '`', '<', '>', '[', ']', '\\'),
+          array('%20', '%22', '%60', '%3C', '%3E', '%5B', '%5D', '%5C'),
           $text
         );
     }
