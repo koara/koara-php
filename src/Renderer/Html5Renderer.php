@@ -100,7 +100,7 @@ class Html5Renderer implements Renderer
             $this->out .= ' class="language-'.$this->escape($node->getLanguage()).'"';
         }
         $this->out .= '>';
-        $this->out .= $this->escape($node.getValue())."</code></pre>\n";
+        $this->out .= $this->escape($node->getValue())."</code></pre>\n";
         if (!$node->isNested()) {
             $this->out .= "\n";
         }

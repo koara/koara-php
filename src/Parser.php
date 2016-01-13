@@ -2,6 +2,8 @@
 namespace Koara;
 
 use Koara\Ast\Blockquote;
+use Koara\Ast\Code;
+use Koara\Ast\CodeBlock;
 use Koara\Ast\Document;
 use Koara\Ast\Em;
 use Koara\Ast\Heading;
@@ -266,44 +268,44 @@ class Parser {
 
  	private function fencedCodeBlock() {
  		$codeBlock = new CodeBlock();
- 		$this->tree.openScope();
- 		$s;
+ 		$this->tree->openScope();
+ 		$s="";
  		$beginColumn = $this->consumeToken(TokenManager::BACKTICK)->beginColumn;
  		do {
  			$this->consumeToken(TokenManager::BACKTICK);
  		} while($this->getNextTokenKind() == TokenManager::BACKTICK);
  		$this->whiteSpace();
  		if ($this->getNextTokenKind() == TokenManager::CHAR_SEQUENCE) {
- 			$this->codeBlock->setLanguage($this->codeLanguage()); 
+ 			$codeBlock->setLanguage($this->codeLanguage()); 
  		}
  		if ($this->getNextTokenKind() != TokenManager::EOF && !$this->fencesAhead()) {
  			$this->consumeToken(TokenManager::EOL);
  			$this->levelWhiteSpace($beginColumn);
  		}
- 		while (fencedCodeBlockHasInlineTokens()) {
+ 		while ($this->fencedCodeBlockHasInlineTokens()) {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
-			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(CHAR_SEQUENCE)->image; break;
-			case TokenManager::COLON: 			$s .= $this->consumeToken(COLON)->image; break;
-			case TokenManager::DASH: 			$s .= $this->consumeToken(DASH)->image; break;
-			case TokenManager::DIGITS: 			$s .= $this->consumeToken(DIGITS)->image; break;
-			case TokenManager::DOT: 			$s .= $this->consumeToken(DOT)->image; break;
-			case TokenManager::EQ: 				$s .= $this->consumeToken(EQ)->image; break;
-			case TokenManager::ESCAPED_CHAR: 	$s .= $this->consumeToken(ESCAPED_CHAR)->image; break;
-			case TokenManager::IMAGE_LABEL: 	$s .= $this->consumeToken(IMAGE_LABEL)->image; break;
-			case TokenManager::LT: 				$s .= $this->consumeToken(LT)->image; break;
-			case TokenManager::GT: 				$s .= $this->consumeToken(GT)->image; break;
-			case TokenManager::LBRACK:			$s .= $this->consumeToken(LBRACK)->image; break;
-			case TokenManager::RBRACK:			$s .= $this->consumeToken(RBRACK)->image; break;
-			case TokenManager::LPAREN:			$s .= $this->consumeToken(LPAREN)->image; break;
-			case TokenManager::RPAREN:			$s .= $this->consumeToken(RPAREN)->image; break;
-			case TokenManager::UNDERSCORE:		$s .= $this->consumeToken(UNDERSCORE)->image; break;
-			case TokenManager::BACKTICK:		$s .= $this->consumeToken(BACKTICK)->image; break;
+			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
+			case TokenManager::COLON: 			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
+			case TokenManager::DASH: 			$s .= $this->consumeToken(TokenManager::DASH)->image; break;
+			case TokenManager::DIGITS: 			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
+			case TokenManager::DOT: 			$s .= $this->consumeToken(TokenManager::DOT)->image; break;
+			case TokenManager::EQ: 				$s .= $this->consumeToken(TokenManager::EQ)->image; break;
+			case TokenManager::ESCAPED_CHAR: 	$s .= $this->consumeToken(TokenManager::ESCAPED_CHAR)->image; break;
+			case TokenManager::IMAGE_LABEL: 	$s .= $this->consumeToken(TokenManager::IMAGE_LABEL)->image; break;
+			case TokenManager::LT: 				$s .= $this->consumeToken(TokenManager::LT)->image; break;
+			case TokenManager::GT: 				$s .= $this->consumeToken(TokenManager::GT)->image; break;
+			case TokenManager::LBRACK:			$s .= $this->consumeToken(TokenManager::LBRACK)->image; break;
+			case TokenManager::RBRACK:			$s .= $this->consumeToken(TokenManager::RBRACK)->image; break;
+			case TokenManager::LPAREN:			$s .= $this->consumeToken(TokenManager::LPAREN)->image; break;
+			case TokenManager::RPAREN:			$s .= $this->consumeToken(TokenManager::RPAREN)->image; break;
+			case TokenManager::UNDERSCORE:		$s .= $this->consumeToken(TokenManager::UNDERSCORE)->image; break;
+			case TokenManager::BACKTICK:		$s .= $this->consumeToken(TokenManager::BACKTICK)->image; break;
  			default:
  				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
  					switch ($this->getNextTokenKind()) {
- 					case TokenManager::SPACE: 	$s .= $this->consumeToken(TokenManager::SPACE).image; break;
+ 					case TokenManager::SPACE: 	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
  					}
  				} else if (!$this->fencesAhead()) {
@@ -313,7 +315,7 @@ class Parser {
  				}
  			}
  		}
- 		if (fencesAhead()) {
+ 		if ($this->fencesAhead()) {
  			$this->consumeToken(TokenManager::EOL);
  			$this->whiteSpace();
  			while ($this->getNextTokenKind() == TokenManager::BACKTICK) {
@@ -502,7 +504,7 @@ class Parser {
  	private function codeText() {
  		$text = new Text();
  		$this->tree->openScope();
- 		$s;
+ 		$s="";
  		do {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
@@ -516,7 +518,7 @@ class Parser {
  			case TokenManager::ESCAPED_CHAR:	$s .= $this->consumeToken(TokenManager::ESCAPED_CHAR)->image; break;
  			case TokenManager::IMAGE_LABEL:		$s .= $this->consumeToken(TokenManager::IMAGE_LABEL)->image; break;
  			case TokenManager::LT:				$s .= $this->consumeToken(TokenManager::LT)->image; break;
- 			case TokenManager::LBRACK:			$s .= $this->consumeToken(TokeneManager::LBRACK)->image; break;
+ 			case TokenManager::LBRACK:			$s .= $this->consumeToken(TokenManager::LBRACK)->image; break;
  			case TokenManager::RBRACK:			$s .= $this->consumeToken(TokenManager::RBRACK)->image; break;
  			case TokenManager::LPAREN:			$s .= $this->consumeToken(TokenManager::LPAREN)->image; break;
  			case TokenManager::GT:				$s .= $this->consumeToken(TokenManager::GT)->image; break;
@@ -531,7 +533,7 @@ class Parser {
  				}
  			}
  		} while($this->codeTextHasAnyTokenAhead());
- 		$this->text->setValue($s);
+ 		$text->setValue($s);
  		$this->tree->closeScope($text);
  	}
 
@@ -562,13 +564,13 @@ class Parser {
  	    while($this->getNextTokenKind() == TokenManager::GT) {
  	    	$this->consumeToken($this->getNextTokenKind());
  	    }
- 		while (($this->getNextTokenKind() == TokenManager::SPACE || $this->getNextTokenKind() == TokenManager::TAB) && $currentPos < ($this->threshold - 1)) {
+ 		while (($this->getNextTokenKind() == TokenManager::SPACE || $this->getNextTokenKind() == TokenManager::TAB) && $currentPos < ($threshold - 1)) {
  			$currentPos = $this->consumeToken($this->getNextTokenKind())->beginColumn;
  		}
  	}
 
  	private function codeLanguage() {
- 		$s;
+ 		$s="";
  		do {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
@@ -973,7 +975,7 @@ class Parser {
 	private function fencesAhead() {
 		if($this->getToken(1)->kind == TokenManager::EOL) {
 			$i = $this->skip(2, TokenManager::SPACE, TokenManager::TAB, TokenManager::GT);
-			if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2).kind == TokenManager::BACKTICK) {
+			if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK) {
 				$i = $this->skip($i+3, TokenManager::SPACE, TokenManager::TAB);
 				return $this->getToken($i)->kind == TokenManager::EOL || $this->getToken($i)->kind == TokenManager::EOF;
 			}
@@ -2301,7 +2303,7 @@ class Parser {
 			$this->scanPosition = $xsp;
 			if ($this->scanToken(TokenManager::BACKSLASH)) {
 				$this->scanPosition = $xsp;
-				if ($this>scanToken(TokenManager::CHAR_SEQUENCE)) {
+				if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
 					$this->scanPosition = $xsp;
 					if ($this->scanToken(TokenManager::COLON)) {
 						$this->scanPosition = $xsp;
@@ -2336,7 +2338,7 @@ class Parser {
 																				$this->lookingAhead = true;
 																				$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
 																				$this->lookingAhead = false;
-																				if (!$thi->semanticLookAhead || $this->scanWhitspaceToken()) {
+																				if (!$this->semanticLookAhead || $this->scanWhitspaceToken()) {
 																					$this->scanPosition = $xsp;
 																					$this->lookingAhead = true;
 																					$this->semanticLookAhead = !$this->fencesAhead();

@@ -143,7 +143,7 @@ class TokenManager
             return $this->moveStringLiteralDfa3_0($active, 0x2000);
         }
 
-        return startNfa(1, $active);
+        return $this->startNfa(1, $active);
     }
 
     private function moveStringLiteralDfa3_0($old, $active)

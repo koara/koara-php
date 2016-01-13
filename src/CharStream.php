@@ -110,7 +110,7 @@ class CharStream {
         	return implode(array_slice($this->buffer, $this->tokenBegin, $this->bufpos - $this->tokenBegin + 1));
         } else {
         	return implode(array_slice($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin))
-        		.implode($this->buffer, 0, $this->bufpos + 1);
+        		.implode(array_slice($this->buffer, 0, $this->bufpos + 1));
         }
     }
 
