@@ -4,7 +4,7 @@ sudo: false
 
 before_script:
   - travis_retry composer self-update
-  - travis_retry composer update "--prefer-stable --prefer-lowest" --no-interaction --prefer-source
+  - travis_retry composer update
   
 php:
   - "7.0"
