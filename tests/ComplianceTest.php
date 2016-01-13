@@ -37,7 +37,10 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	 		$renderer = new Html5Renderer();
 	 		$document->accept($renderer);
 	 		
+	 		//echo "\n".$renderer->getOutput();
+	 		
 	 		$this->assertEquals($html, $renderer->getOutput());
+	 		
 	}
 
 }

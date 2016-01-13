@@ -227,7 +227,7 @@ class Parser {
  		$listBeginColumn = $this->orderedListItem();
  		while ($this->listItemAhead($listBeginColumn, true)) {
  			while ($this->getNextTokenKind() == TokenManager::EOL) {
- 				$this->consumeToken(EOL);
+ 				$this->consumeToken(TokenManager::EOL);
  			}
  			$this->whiteSpace();
  			if ($this->currentQuoteLevel > 0) {
@@ -998,7 +998,7 @@ class Parser {
 					return false;
 				} else if($t->kind != TokenManager::SPACE && $t->kind != TokenManager::TAB && $t->kind != TokenManager::GT && $t->kind != TokenManager::EOL) {
 					if($ordered) {
-						return (t.kind == TokenManager::DIGITS && $this->getToken(i+1).kind == DOT && $t->beginColumn >= $listBeginColumn);
+						return ($t->kind == TokenManager::DIGITS && $this->getToken($i+1)->kind == TokenManager::DOT && $t->beginColumn >= $listBeginColumn);
 					}
 					return $t->kind == TokenManager::DASH && $t->beginColumn >= $listBeginColumn;
 				}
