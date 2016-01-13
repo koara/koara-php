@@ -1,4 +1,10 @@
 language: php
+
+sudo: false
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer update "--prefer-stable --prefer-lowest" --no-interaction --prefer-source
+  
 php:
   - "7.0"
-install: php vendor/vendors.php
