@@ -159,7 +159,7 @@ class TokenManager
     private function moveStringLiteralDfa4_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar == 69) || $this->ordutf8($this->curChar == 101)) {
+        if ($this->ordutf8($this->curChar) == 69 || $this->ordutf8($this->curChar) == 101) {
             return $this->moveStringLiteralDfa5_0($active, 0x2000);
         }
 
@@ -173,7 +173,7 @@ class TokenManager
             return $this->stopAtPos(5, 13);
         }
 
-        return startNfa(4, $active);
+        return $this->startNfa(4, $active);
     }
 
     private function startNfa($pos, $active)

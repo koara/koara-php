@@ -4,6 +4,7 @@ namespace Koara;
 use Koara\Ast\Document;
 use Koara\Ast\Em;
 use Koara\Ast\Heading;
+use Koara\Ast\Image;
 use Koara\Ast\ListBlock;
 use Koara\Ast\ListItem;
 use Koara\Ast\LineBreak;
@@ -60,7 +61,7 @@ class Parser {
   		$this->token = new Token();
  		$this->tree = new TreeState();
   		$this->nextTokenKind = -1;
- 		 		
+
   		$document = new Document(); 		
   		$this->tree->openScope();	 		
  			
@@ -382,7 +383,7 @@ class Parser {
 	
  	private function image() {
  		$image = new Image();
- 		tree.openScope();
+ 		$this->tree->openScope();
  		$ref = "";
  		$this->consumeToken(TokenManager::LBRACK);
  		$this->whiteSpace();

@@ -135,7 +135,7 @@ class Html5Renderer implements Renderer
 
     public function visitImage($node)
     {
-        $this->out .= '<img src="' + $this->escapeUrl($node->getValue()) + '" alt="';
+        $this->out .= '<img src="'.$this->escapeUrl($node->getValue()).'" alt="';
         $node->childrenAccept($this);
         $this->out .= '" />';
     }
