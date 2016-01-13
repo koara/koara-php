@@ -8,6 +8,6 @@ class BlockQuote extends BlockElement
 {
     public function accept(Renderer $renderer)
     {
-        $renderer->visitBlockquote($this);
+        $renderer->visitBlockQuote($this);
     }
 }

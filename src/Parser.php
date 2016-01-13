@@ -1,7 +1,7 @@
 <?php 
 namespace Koara;
 
-use Koara\Ast\Blockquote;
+use Koara\Ast\BlockQuote;
 use Koara\Ast\Code;
 use Koara\Ast\CodeBlock;
 use Koara\Ast\Document;
@@ -141,7 +141,7 @@ class Parser {
  	}
 	
 	private function blockquote() {
- 		$blockquote = new Blockquote();
+ 		$blockquote = new BlockQuote();
  		$this->tree->openScope();
  		$this->currentQuoteLevel++;
  		$this->consumeToken(TokenManager::GT);
@@ -160,7 +160,7 @@ class Parser {
  				$this->blockElement();
  			}
  		}
- 		while ($this->hasBlockquoteEmptyLinesAhead()) {
+ 		while ($this->hasBlockQuoteEmptyLinesAhead()) {
  			$this->blockquoteEmptyLine();
  		}
  		$this->currentQuoteLevel--;
@@ -1128,7 +1128,7 @@ class Parser {
 		$this->lookAhead = 2147483647;
 		$this->lastPosition = $this->scanPosition = $this->token;
 		try {
-			return !$this->scanBlockquoteEmptyLine();
+			return !$this->scanBlockQuoteEmptyLine();
 		} catch (LookaheadSuccess $ls) {
 			return true;
 		}
@@ -1174,11 +1174,11 @@ class Parser {
 		}
 	}
 
-	private function hasBlockquoteEmptyLinesAhead() {
+	private function hasBlockQuoteEmptyLinesAhead() {
 		$this->lookAhead = 2147483647;
 		$this->lastPosition = $this->scanPosition = $this->token;
 		try {
-			return !$this->scanBlockquoteEmptyLines();
+			return !$this->scanBlockQuoteEmptyLines();
 		} catch (LookaheadSuccess $ls) {
 			return true;
 		}
@@ -2403,11 +2403,11 @@ class Parser {
 		return false;
 	}
 
-	private function scanBlockquoteEmptyLines() {
-		return $this->scanBlockquoteEmptyLine() || $this->scanToken(TokenManager::EOL);
+	private function scanBlockQuoteEmptyLines() {
+		return $this->scanBlockQuoteEmptyLine() || $this->scanToken(TokenManager::EOL);
 	}
 
-	private function scanBlockquoteEmptyLine() {
+	private function scanBlockQuoteEmptyLine() {
 		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::GT) || $this->scanWhitspaceTokens()) {
 			return true;
 		}

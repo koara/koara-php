@@ -8,7 +8,7 @@ interface Renderer
 
     public function visitHeading($node);
 
-    public function visitBlockquote($node);
+    public function visitBlockQuote($node);
 
     public function visitListBlock($node);
 
