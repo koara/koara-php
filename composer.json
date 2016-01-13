@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Jstewmc\\": "vendor/jstewmc/chuncker/src/"
+            "Koara\\": "src/"
         }
     }
 }
