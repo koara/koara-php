@@ -1,6 +1,7 @@
 <?php 
 namespace Koara;
 
+use Koara\Ast\Blockquote;
 use Koara\Ast\Document;
 use Koara\Ast\Em;
 use Koara\Ast\Heading;
@@ -339,7 +340,7 @@ class Parser {
  			if(in_array(Module::BLOCKQUOTES, $this->modules)) {
  				while ($this->getNextTokenKind() == TokenManager::GT) {
  					$this->consumeToken(TokenManager::GT);
- 					$this->twhiteSpace();
+ 					$this->whiteSpace();
  				}
  			}
  			$this->inline();

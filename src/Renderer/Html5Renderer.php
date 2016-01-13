@@ -41,7 +41,7 @@ class Html5Renderer implements Renderer
     public function visitBlockquote($node)
     {
         $this->out .= $this->indent().'<blockquote>';
-        if ($node.getChildren() != null && sizeof($node->getChildren()) > 0) {
+        if ($node->getChildren() != null && sizeof($node->getChildren()) > 0) {
             $this->out .= "\n";
         }
         ++$this->level;
