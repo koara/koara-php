@@ -79,7 +79,7 @@ class Html5Renderer implements Renderer
         }
         $this->out .= '>';
         if ($node->getChildren() != null) {
-            $block = $node->getChildren()[0] instanceof Paragraph || get_class($node->getChildren()[0]) == 'Koara\Ast\BlockElement';
+            $block = $node->getChildren()[0] instanceof Paragraph || get_class($node->getChildren()[0]) === 'Koara\Ast\BlockElement';
             if (sizeof($node->getChildren()) > 1 || !$block) {
                 $this->out .= "\n";
             }

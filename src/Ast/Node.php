@@ -23,7 +23,7 @@ abstract class Node
 
     public function add($node, $i)
     {
-        if ($this->children == null) {
+        if ($this->children === null) {
             $this->children = [];
         }
         $this->children[$i] = $node;

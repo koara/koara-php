@@ -34,7 +34,7 @@ class CharStream {
     public function readChar() {
         if ($this->inBuf > 0) {
             --$this->inBuf;
-            if (++$this->bufpos == $this->bufsize) {
+            if (++$this->bufpos === $this->bufsize) {
                 $this->bufpos = 0;
             }
             return $this->buffer[$this->bufpos];
@@ -48,8 +48,8 @@ class CharStream {
     }
 
     private function fillBuff() {
-        if ($this->maxNextCharInd == $this->available) {
-            if ($this->available == $this->bufsize) {
+        if ($this->maxNextCharInd === $this->available) {
+            if ($this->available === $this->bufsize) {
                 $this->bufpos = 0;
                 $this->maxNextCharInd = 0;
                 if ($this->tokenBegin > 2048) {
@@ -62,7 +62,7 @@ class CharStream {
         $i;
   
         try {
-            if (($i = $this->reader->read($this->buffer, $this->maxNextCharInd, $this->available - $this->maxNextCharInd)) == -1) {
+            if (($i = $this->reader->read($this->buffer, $this->maxNextCharInd, $this->available - $this->maxNextCharInd)) === -1) {
                 throw new Exception();
             } else {
                 $this->maxNextCharInd += $i;
@@ -70,7 +70,7 @@ class CharStream {
         } catch (Exception $e) {
             --$this->bufpos;
             $this->backup(0);
-            if ($this->tokenBegin == -1) {
+            if ($this->tokenBegin === -1) {
                 $this->tokenBegin = $this->bufpos;
             }
             throw $e;

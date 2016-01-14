@@ -55,6 +55,10 @@ class Parser {
 	 * @return Document
 	 */
 	public function parseFile($fileName) {
+		if(strtolower(substr($fileName, strlen($fileName) - 3)) != '.kd') {
+		throw new \InvalidArgumentException("Can only parse files with extension .kd");
+		}
+		
 		return $this->parserReader(new FileReader($fileName));
 	}
 	
