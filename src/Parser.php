@@ -269,7 +269,7 @@ class Parser {
  	private function fencedCodeBlock() {
  		$codeBlock = new CodeBlock();
  		$this->tree->openScope();
- 		$s="";
+ 		$s='';
  		$beginColumn = $this->consumeToken(TokenManager::BACKTICK)->beginColumn;
  		do {
  			$this->consumeToken(TokenManager::BACKTICK);
@@ -306,11 +306,11 @@ class Parser {
  				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE: 	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
+ 					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
  					}
  				} else if (!$this->fencesAhead()) {
  					$this->consumeToken(TokenManager::EOL);
- 					$s .= "\n";
+ 					$s .= '\n';
  					$this->levelWhiteSpace($beginColumn);
  				}
  			}
@@ -353,7 +353,7 @@ class Parser {
  	private function text() {
  		$text = new Text();
  		$this->tree->openScope($text);
-		$s = "";
+		$s = '';
  		while ($this->textHasTokensAhead()) {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
@@ -374,7 +374,7 @@ class Parser {
  				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
+ 					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
  					}
  				}
  			}
@@ -387,7 +387,7 @@ class Parser {
  	private function image() {
  		$image = new Image();
  		$this->tree->openScope();
- 		$ref = "";
+ 		$ref = '';
  		$this->consumeToken(TokenManager::LBRACK);
  		$this->whiteSpace();
  		$this->consumeToken(TokenManager::IMAGE_LABEL);
@@ -411,7 +411,7 @@ class Parser {
  	private function link() {
  		$link = new Link();
  		$this->tree->openScope();
- 		$ref = "";
+ 		$ref = '';
  		$this->consumeToken(TokenManager::LBRACK);
  		$this->whiteSpace();
  		while ($this->linkHasAnyElements()) {
@@ -504,7 +504,7 @@ class Parser {
  	private function codeText() {
  		$text = new Text();
  		$this->tree->openScope();
- 		$s="";
+ 		$s='';
  		do {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
@@ -528,7 +528,7 @@ class Parser {
  				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
+ 					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
  					}
  				}
  			}
@@ -570,7 +570,7 @@ class Parser {
  	}
 
  	private function codeLanguage() {
- 		$s="";
+ 		$s='';
  		do {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
@@ -592,7 +592,7 @@ class Parser {
  			case TokenManager::RPAREN: 			$s .= $this->consumeToken(TokenManager::RPAREN)->image; break;
  			case TokenManager::UNDERSCORE: 		$s .= $this->consumeToken(TokenManager::UNDERSCORE)->image; break;
  			case TokenManager::SPACE: 			$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 			case TokenManager::TAB: 			$s .= "    "; break;
+ 			case TokenManager::TAB: 			$s .= '    '; break;
  			default: break;
  			}
  		} while ($this->getNextTokenKind() != TokenManager::EOL && $this->getNextTokenKind() != TokenManager::EOF);
@@ -622,7 +622,7 @@ class Parser {
  	private function resourceText() {
  		$text = new Text();
  		$this->tree->openScope();
-		$s="";
+		$s='';
  		do {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::BACKSLASH:		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
@@ -642,7 +642,7 @@ class Parser {
  				if (!$this->nextAfterSpace(TokenManager::RBRACK)) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
+ 					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
  					}
  				}
  			}
@@ -661,7 +661,7 @@ class Parser {
  	}
 
  	private function resourceUrlText() {
- 		$s="";
+ 		$s='';
  		while ($this->resourceTextHasElementsAhead()) {
  			switch ($this->getNextTokenKind()) {
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
@@ -685,7 +685,7 @@ class Parser {
  				if (!$this->nextAfterSpace(TokenManager::RPAREN)) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:		$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
- 					case TokenManager::TAB:			$this->consumeToken(TokenManager::TAB); $s .= "    "; break;
+ 					case TokenManager::TAB:			$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
 					}
  				}
  			}

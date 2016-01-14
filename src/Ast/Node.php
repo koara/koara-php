@@ -32,7 +32,8 @@ abstract class Node
     public function childrenAccept(Renderer $renderer)
     {
         if ($this->children != null) {
-            for ($i = 0; $i < sizeof($this->children); ++$i) {
+        	$size = sizeof($this->children);
+            for ($i = 0; $i < $size; ++$i) {
                 $this->children[$i]->accept($renderer);
             }
         }
