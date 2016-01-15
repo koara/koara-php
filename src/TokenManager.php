@@ -83,7 +83,8 @@ class TokenManager
 
     private function moveStringLiteralDfa0_0()
     {
-        switch ($this->ordutf8($this->curChar)) {
+    	$c = $this->ordutf8($this->curChar);
+        switch ($c) {
         case 9:  return $this->startNfaWithStates(0, self::TAB, 8);
         case 32: return $this->startNfaWithStates(0, self::SPACE, 8);
         case 40: return $this->stopAtPos(0, self::LPAREN);
@@ -192,8 +193,8 @@ class TokenManager
             if (++$this->round == 0x7fffffff) {
                 $this->round = 0x80000001;
             }
-
-            if ($this->ordutf8($this->curChar) < 64) {
+			$c = $this->ordutf8($this->curChar);
+            if ($c < 64) {
                 $l = 1 << $this->ordutf8($this->curChar);
                 do {
                     switch ($this->jjstateSet[--$i]) {
@@ -256,12 +257,12 @@ class TokenManager
                         }
                         break;
                     case 4:
-                        if ($this->ordutf8($this->curChar) == 10 && $kind > 9) {
+                        if ($c == 10 && $kind > 9) {
                             $kind = 9;
                         }
                         break;
                     case 5:
-                        if ($this->ordutf8($this->curChar == 13)) {
+                        if ($c == 13) {
                             $this->jjstateSet[$jjnewStateCnt++] = 4;
                         }
                         break;
@@ -272,8 +273,8 @@ class TokenManager
                         break;
                     }
                 } while ($i != $startsAt);
-            } elseif ($this->ordutf8($this->curChar) < 128) {
-                $l = 1 << ($this->ordutf8($this->curChar) & 077);
+            } elseif ($c < 128) {
+                $l = 1 << ($c & 077);
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:

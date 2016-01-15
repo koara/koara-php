@@ -961,7 +961,7 @@ class Parser {
 						|| $this->getToken($i)->kind == TokenManager::EOL
 						|| $this->getToken($i)->kind == TokenManager::DASH
 						|| ($this->getToken($i)->kind == TokenManager::DIGITS && $this->getToken($i+1)->kind == TokenManager::DOT)
-						|| ($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken(i+2)->kind == TokenManager::BACKTICK)
+						|| ($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK)
 						|| $this->headingAhead($i)) {
 							return false;
 						}
@@ -1051,7 +1051,7 @@ class Parser {
 	private function skip($offset, ...$tokens) {
 		for($i=$offset;;$i++) {
 			$t = $this->getToken($i);
-			if($t->kind == TokenManager::EOF || !in_array($t->kind, $tokens)) { return $i; }
+			if(!in_array($t->kind, $tokens) || $t->kind == TokenManager::EOF ) { return $i; }
 		}
 	}
 	
@@ -1066,13 +1066,15 @@ class Parser {
 	}
 	
 	private function hasFencedCodeBlockAhead() {
-		$this->lookAhead = 2147483647;
-		$this->lastPosition = $this->scanPosition = $this->token;
-		try {
-			return !$this->scanFencedCodeBlock();
-		} catch (LookaheadSuccess $ls) {
-			return true;
-		}
+     	$this->lookAhead = 2147483647;
+	  	$this->lastPosition = $this->scanPosition = $this->token;
+  		try {
+    		return !$this->scanFencedCodeBlock();
+  		} catch (LookaheadSuccess $ls) {
+    		return true;
+ 		}
+		
+		return false;
 	}
 	
 	
@@ -2302,7 +2304,7 @@ class Parser {
 	}
 	
 	private function scanFencedCodeBlockTokens() {
-		$xsp = $this->scanPosition;
+ 		$xsp = $this->scanPosition;
 		if ($this->scanToken(TokenManager::ASTERISK)) {
 			$this->scanPosition = $xsp;
 			if ($this->scanToken(TokenManager::BACKSLASH)) {
@@ -2347,7 +2349,8 @@ class Parser {
 																					$this->lookingAhead = true;
 																					$this->semanticLookAhead = !$this->fencesAhead();
 																					$this->lookingAhead = false;
-																					return !$this->semanticLookAhead || $this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens();
+																					// TODO: memory leak
+																					return !$this->semanticLookAhead || $this->scanToken(TokenManager::EOL);
 																				}
 																			}
 																		}
@@ -2374,7 +2377,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK)) {
 			return true;
 		}
-		$xsp;
+ 		$xsp;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanToken(TokenManager::BACKTICK)) {
@@ -2404,7 +2407,7 @@ class Parser {
 		if ($this->scanNoFencedCodeBlockAhead()) {
 			$this->scanPosition = $xsp;
 		}
-		return false;
+ 		return false;
 	}
 
 	private function scanBlockQuoteEmptyLines() {
