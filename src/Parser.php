@@ -314,7 +314,7 @@ class Parser {
  					}
  				} else if (!$this->fencesAhead()) {
  					$this->consumeToken(TokenManager::EOL);
- 					$s .= '\n';
+ 					$s .= "\n";
  					$this->levelWhiteSpace($beginColumn);
  				}
  			}
@@ -2350,7 +2350,7 @@ class Parser {
 																					$this->semanticLookAhead = !$this->fencesAhead();
 																					$this->lookingAhead = false;
 																					// TODO: memory leak
-																					return !$this->semanticLookAhead || $this->scanToken(TokenManager::EOL);
+																					return !$this->semanticLookAhead || $this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens();
 																				}
 																			}
 																		}

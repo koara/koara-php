@@ -43,7 +43,7 @@ class CharStream {
             $this->fillBuff();
         }
         $c = $this->buffer[$this->bufpos];
-        $this->updateLineColumn($c);
+        $this->updateLineColumn(ord($c));
         return $c;
     }
 
@@ -92,7 +92,7 @@ class CharStream {
             $this->line += $this->column;
         }
         
-        switch (ord($c)) {
+        switch ($c) {
         case 10:
             $this->prevCharIsLF = true;
             break;

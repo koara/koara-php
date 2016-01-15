@@ -11,7 +11,7 @@ class Token
     public $endColumn;
     public $image;
     public $next;
-    public $specialToken;
+    //public $specialToken;
 
     public function __construct($kind = 0, $beginLine = 0, $beginColumn = 0, $endLine = 0, $endColumn = 0, $image = NULL)
     {
@@ -22,4 +22,5 @@ class Token
         $this->endColumn = $endColumn;
         $this->image = $image;
     }
+        
 }
