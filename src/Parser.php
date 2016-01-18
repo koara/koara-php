@@ -16,6 +16,7 @@ use Koara\Ast\Paragraph;
 use Koara\Ast\Strong;
 use Koara\Ast\Text;
 use Koara\Io\FileReader;
+use Koara\Io\StringReader;
 use Koara\Io\Reader;
 use Koara\LookaheadSuccess;
 
@@ -288,9 +289,9 @@ class Parser {
  		}
  		while ($this->fencedCodeBlockHasInlineTokens()) {
  			switch ($this->getNextTokenKind()) {
+			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
-			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
 			case TokenManager::COLON: 			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
 			case TokenManager::DASH: 			$s .= $this->consumeToken(TokenManager::DASH)->image; break;
 			case TokenManager::DIGITS: 			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
@@ -360,8 +361,8 @@ class Parser {
 		$s = '';
  		while ($this->textHasTokensAhead()) {
  			switch ($this->getNextTokenKind()) {
- 			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
+ 			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
 			case TokenManager::COLON: 			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
 			case TokenManager::DASH: 			$s .= $this->consumeToken(TokenManager::DASH)->image; break;
 			case TokenManager::DIGITS: 			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
@@ -511,9 +512,9 @@ class Parser {
  		$s='';
  		do {
  			switch ($this->getNextTokenKind()) {
+ 			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
- 			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::COLON: 			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
  			case TokenManager::DASH: 			$s .= $this->consumeToken(TokenManager::DASH)->image; break;
  			case TokenManager::DIGITS:			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
@@ -577,10 +578,10 @@ class Parser {
  		$s='';
  		do {
  			switch ($this->getNextTokenKind()) {
+ 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
  			case TokenManager::BACKTICK: 		$s .= $this->consumeToken(TokenManager::BACKTICK)->image; break;
- 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::COLON:			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
  			case TokenManager::DASH:	 		$s .= $this->consumeToken(TokenManager::DASH)->image; break;
  			case TokenManager::DIGITS: 			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
@@ -629,9 +630,9 @@ class Parser {
 		$s='';
  		do {
  			switch ($this->getNextTokenKind()) {
+ 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::BACKSLASH:		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
  			case TokenManager::COLON:			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
- 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::DASH:			$s .= $this->consumeToken(TokenManager::DASH)->image; break;
  			case TokenManager::DIGITS:			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
  			case TokenManager::DOT:				$s .= $this->consumeToken(TokenManager::DOT)->image; break;
@@ -668,10 +669,10 @@ class Parser {
  		$s='';
  		while ($this->resourceTextHasElementsAhead()) {
  			switch ($this->getNextTokenKind()) {
+ 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH:		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
  			case TokenManager::BACKTICK:		$s .= $this->consumeToken(TokenManager::BACKTICK)->image; break;
- 			case TokenManager::CHAR_SEQUENCE:	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::COLON:			$s .= $this->consumeToken(TokenManager::COLON)->image; break;
  			case TokenManager::DASH:			$s .= $this->consumeToken(TokenManager::DASH)->image; break;
  			case TokenManager::DIGITS:			$s .= $this->consumeToken(TokenManager::DIGITS)->image; break;
