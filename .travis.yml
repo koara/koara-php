@@ -1,7 +1,6 @@
-language: php
-php:
-  - '7.0'
-  - nightly
-install: composer install
-script:
-  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+ language: php
+    php:
+      - 7.0
+    install:
+      - composer install --no-dev --quiet
+    script: phpunit -c phpunit.xml --coverage-text
