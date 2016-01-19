@@ -59,7 +59,7 @@ class CharStream {
                 $this->available = $this->bufsize;
             }
         }
-        $i;
+        $i=0;
   
         try {
             if (($i = $this->reader->read($this->buffer, $this->maxNextCharInd, $this->available - $this->maxNextCharInd)) === -1) {
