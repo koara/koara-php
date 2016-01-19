@@ -3,4 +3,5 @@
       - 7.0
     install:
       - composer install --no-dev --quiet
+    before_script: phpenv config-add travis.php.ini
     script: phpunit -c phpunit.xml --coverage-text
