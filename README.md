@@ -30,7 +30,7 @@ $parser->setModules(Module::PARAGRAPHS, Module::HEADINGS, Module::LISTS, Module:
         Module::IMAGES, Module::FORMATTING, Module::BLOCKQUOTES, Module::CODE);
 
 // Parse string or file and generate AST
-$document = $parser->parseFile('/Users/andy/git/koara-php/tests/resources/spec/code/code-050-block-c.kd');
+$document = $parser->parseFile('Hello World!');
 
 // Render AST as HTML
 $renderer = new Html5Renderer();
