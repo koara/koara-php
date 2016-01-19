@@ -2238,7 +2238,7 @@ class Parser {
 	}
 
 	private function scanParagraph() {
-		$xsp;
+		$xsp = null;
 		if ($this->scanInlineElement()) {
 			return true;
 		}
