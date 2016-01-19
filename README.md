@@ -11,11 +11,33 @@
 - Composer:
 
   ```bash
+  composer require koara/koara
   ```
   
 ## Usage
 ```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
 
+use Koara\Parser;
+use Koara\Module;
+use Koara\Renderer\Html5Renderer;
+
+$parser = new Parser();
+
+// Enable which modules to parse (all are parsed by default)
+$parser->setModules(Module::PARAGRAPHS, Module::HEADINGS, Module::LISTS, Module::LINKS,
+        Module::IMAGES, Module::FORMATTING, Module::BLOCKQUOTES, Module::CODE);
+
+// Parse string or file and generate AST
+$document = $parser->parseFile('/Users/andy/git/koara-php/tests/resources/spec/code/code-050-block-c.kd');
+
+// Render AST as HTML
+$renderer = new Html5Renderer();
+$document->accept($renderer);
+
+// Prints '<p>Hello World!</p>'
+echo $renderer->getOutput();
 ```
 
 ## Community
