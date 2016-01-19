@@ -921,7 +921,7 @@ class Parser {
  	 private function blockAhead($blockBeginColumn) {
  	 	$quoteLevel=0;
  	 	if($this->getToken(1)->kind == TokenManager::EOL) {
-    		$t;
+    		$t=null;
 			$i = 2;
 			$quoteLevel=0;
 			do {
