@@ -1,10 +1,13 @@
-language: php
+nguage: php
 php:
-  - '7.0'
-install:
-  - composer install --no-dev --quiet
+  - "7.0"
+before_script:
+ - wget http://getcomposer.org/composer.phar
+ - php composer.phar install --dev --no-interaction
+
 script:
-  - mkdir -p build/logs
-  - phpunit --coverage-clover build/logs/clover.xml
-after_success:
-  - php vendor/bin/coveralls -v
+ - mkdir -p build/logs
+ - phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+ - php vendor/bin/coveralls -v
