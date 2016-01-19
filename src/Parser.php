@@ -919,7 +919,7 @@ class Parser {
  	}
 	
  	 private function blockAhead($blockBeginColumn) {
- 	 	$quoteLevel;
+ 	 	$quoteLevel=0;
  	 	if($this->getToken(1)->kind == TokenManager::EOL) {
     		$t;
 			$i = 2;
@@ -1521,7 +1521,7 @@ class Parser {
 		if ($this->scanText()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanText()) {
@@ -1601,7 +1601,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanCodeTextTokensAhead()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->hasCodeTextOnNextLineAhead()) {
@@ -1616,7 +1616,7 @@ class Parser {
 		if ($this->scanCodeTextTokens()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanCodeTextTokens()) {
@@ -1631,7 +1631,7 @@ class Parser {
 		if ($this->scanWhitespaceTokenBeforeEol()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanToken(TokenManager::GT)) {
@@ -1643,7 +1643,7 @@ class Parser {
 	}
 	
 	private function scanWhitspaceTokens() {
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanWhitspaceToken()) {
@@ -1686,7 +1686,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::UNDERSCORE) || $this->scanEmWithinStrongElements()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanEmWithinStrongElements()) {
@@ -1728,7 +1728,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::UNDERSCORE) || $this->scanEmElements()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanEmElements()) {
@@ -1767,7 +1767,7 @@ class Parser {
 		if ($this->scanEmWithinStrongMultilineContent()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanEmWithinStrongMultilineContent()) {
@@ -1782,7 +1782,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::UNDERSCORE) || $this->hasNoEmWithinStrongMultilineContentAhead()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanWhitespaceTokenBeforeEol() || $this->hasNoEmWithinStrongMultilineContentAhead()) {
@@ -1851,7 +1851,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::ASTERISK) || $this->scanStrongWithinEmElements()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanStrongWithinEmElements()) {
@@ -1896,7 +1896,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::ASTERISK) || $this->scanStrongElements()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanStrongElements()) {
@@ -1935,7 +1935,7 @@ class Parser {
 		if ($this->scanStrongWithinEmMultilineElements()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanStrongWithinEmMultilineElements()) {
@@ -1950,7 +1950,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::ASTERISK) || $this->scanForMoreStrongWithinEmMultilineElements()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanWhitespaceTokenBeforeEol() || $this->scanForMoreStrongWithinEmMultilineElements()) {
@@ -2060,7 +2060,7 @@ class Parser {
 	}
 
 	private function scanResourceTextElements() {
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanResourceTextElement()) {
@@ -2149,7 +2149,7 @@ class Parser {
 		if ($this->scanResourceElement()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanResourceElement()) {
@@ -2164,7 +2164,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::LBRACK) || $this->scanWhitspaceTokens() || $this->scanLinkElement()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanLinkElement()) {
@@ -2186,7 +2186,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::LBRACK) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::IMAGE_LABEL) || $this->scanImageElement()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanImageElement()) {
@@ -2267,7 +2267,7 @@ class Parser {
 		if ($this->scanForCodeLanguageElement()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanForCodeLanguageElement()) {
@@ -2293,7 +2293,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::BACKTICK)) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanToken(TokenManager::BACKTICK)) {
@@ -2378,7 +2378,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK)) {
 			return true;
 		}
- 		$xsp;
+ 		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanToken(TokenManager::BACKTICK)) {
@@ -2408,7 +2408,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens() || $this->scanToken(TokenManager::GT) || $this->scanWhitspaceTokens()) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanToken(TokenManager::GT) || $this->scanWhitspaceTokens()) {
@@ -2423,7 +2423,7 @@ class Parser {
 		if ($this->scanToken(TokenManager::EQ)) {
 			return true;
 		}
-		$xsp;
+		$xsp=null;
 		while (true) {
 			$xsp = $this->scanPosition;
 			if ($this->scanToken(TokenManager::EQ)) {
