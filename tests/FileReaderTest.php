@@ -12,7 +12,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
 	}
 	
   	public function testRead() {
- 		$reader = new FileReader('tests/resources/filereader.kd');
+ 		$reader = new FileReader('tests/filereader.kd');
  		$this->assertEquals(4, $reader->read($this->buffer, 0, 4));
  		$this->assertEquals('a', $this->buffer[0]);
 		$this->assertEquals('b', $this->buffer[1]);
@@ -23,7 +23,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
   	}
  	
  	public function testReadPartOfString() {
- 		$reader = new FileReader('tests/resources/filereader.kd');
+ 		$reader = new FileReader('tests/filereader.kd');
  		$this->assertEquals(2, $reader->read($this->buffer, 0, 2));
  		$this->assertEquals('a', $this->buffer[0]);
  		$this->assertEquals('b', $this->buffer[1]);
@@ -31,7 +31,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	}
  	
  	public function testReadWithOffsetPartOfString() {
- 		$reader = new FileReader('tests/resources/filereader.kd');
+ 		$reader = new FileReader('tests/filereader.kd');
  		$this->assertEquals(4, $reader->read($this->buffer, 2, 4));
  		$this->assertFalse(array_key_exists(0, $this->buffer));
  		$this->assertFalse(array_key_exists(1, $this->buffer));
@@ -40,7 +40,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	 }
  	
  	 public function testReadWithOffsetTooLargePartOfString() {
- 	 	$reader = new FileReader('tests/resources/filereader.kd');
+ 	 	$reader = new FileReader('tests/filereader.kd');
  	 	$this->assertEquals(4, $reader->read($this->buffer, 6, 4));
  	 	$this->assertFalse(array_key_exists(0, $this->buffer));
  	 	$this->assertFalse(array_key_exists(1, $this->buffer));
@@ -49,7 +49,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	 }
  	
  	public function testReadUntilEof() {
- 		$reader = new FileReader('tests/resources/filereader.kd');
+ 		$reader = new FileReader('tests/filereader.kd');
  		$this->assertEquals(2, $reader->read($this->buffer, 0, 2));
  		$this->assertEquals('a', $this->buffer[0]);
  		$this->assertEquals('b', $this->buffer[1]);
@@ -62,7 +62,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	}
  	
  	 public function testReadWithUnicode() {
- 	 	$reader = new FileReader('tests/resources/filereader-unicode.kd');
+ 	 	$reader = new FileReader('tests/filereader-unicode.kd');
  	 	$this->assertEquals(4, $reader->read($this->buffer, 0, 4));
  	 	$this->assertEquals('ð', $this->buffer[0]);
  	 	$this->assertEquals('i', $this->buffer[1]);
@@ -72,7 +72,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	 }
  	
  	 public function testReadWithUnicodePartOfString() {
- 	 	$reader = new FileReader('tests/resources/filereader-unicode.kd');
+ 	 	$reader = new FileReader('tests/filereader-unicode.kd');
  	 	$this->assertEquals(2, $reader->read($this->buffer, 0, 2));
  	 	$this->assertEquals('ð', $this->buffer[0]);
  	 	$this->assertEquals('i', $this->buffer[1]);
@@ -80,7 +80,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	 }
  	
  	 public function testReadWithUnicodeAndOffsetPartOfString() {
- 	 	$reader = new FileReader('tests/resources/filereader-unicode.kd');
+ 	 	$reader = new FileReader('tests/filereader-unicode.kd');
  	 	$this->assertEquals(4, $reader->read($this->buffer, 2, 4));
  	 	$this->assertFalse(array_key_exists(0, $this->buffer));
  	 	$this->assertFalse(array_key_exists(1, $this->buffer));
@@ -89,7 +89,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	 }
  	
  	 public function testReadWithUnicodeAndOffsetTooLargePartOfString() {
- 	 	$reader = new FileReader('tests/resources/filereader-unicode.kd');
+ 	 	$reader = new FileReader('tests/filereader-unicode.kd');
  	 	$this->assertEquals(4, $reader->read($this->buffer, 6, 4));
  	 	$this->assertFalse(array_key_exists(0, $this->buffer));
  	 	$this->assertFalse(array_key_exists(1, $this->buffer));
@@ -98,7 +98,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase {
  	 }
  	
  	 public function testReadWithUnicodeUntilEof() {
- 	 	$reader = new FileReader('tests/resources/filereader-unicode.kd');
+ 	 	$reader = new FileReader('tests/filereader-unicode.kd');
  	 	$this->assertEquals(3, $reader->read($this->buffer, 0, 3));
  	 	$this->assertEquals('ð', $this->buffer[0]);
  	 	$this->assertEquals('i', $this->buffer[1]);
