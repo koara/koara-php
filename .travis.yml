@@ -5,3 +5,5 @@ install:
   - composer install --no-dev --quiet
 script:
   - phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml
+after_success:
+  - travis_retry php vendor/bin/coveralls
