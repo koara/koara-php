@@ -2397,17 +2397,6 @@ class Parser {
 		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens()) {
 			$this->scanPosition = $xsp;
 		}
-		while (true) {
-			$xsp = $this->scanPosition;
-			if ($this->scanFencedCodeBlockTokens()) {
-				$this->scanPosition = $xsp;
-				break;
-			}
-		}
-		$xsp = $this->scanPosition;
-		if ($this->scanNoFencedCodeBlockAhead()) {
-			$this->scanPosition = $xsp;
-		}
  		return false;
 	}
 

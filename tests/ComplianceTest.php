@@ -27,8 +27,8 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provider
 	 */
-	public function testAdd($module, $testcase) {
-  			$html = file_get_contents(dirname(__FILE__).'/resources/spec/'.$module.'/'.$testcase.'.htm');
+	public function testAdd($module, $testcase) {		
+			$html = file_get_contents(dirname(__FILE__).'/resources/spec/'.$module.'/'.$testcase.'.htm');
 	  		$html = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html, 'UTF-8, ISO-8859-1', true));
 		 
 	  		$parser = new Parser();

@@ -22,5 +22,6 @@ class Token
         $this->endColumn = $endColumn;
         $this->image = $image;
     }
+
         
 }
