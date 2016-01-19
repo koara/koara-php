@@ -332,7 +332,7 @@ class Parser {
  	}
 	
  	private function paragraph() {
- 		$paragraph;
+ 		$paragraph = null;
  		if(in_array(Module::PARAGRAPHS, $this->modules)) {
  			$paragraph = new Paragraph();			
  		} else {
