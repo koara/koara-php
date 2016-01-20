@@ -21,6 +21,10 @@ abstract class Node
      */
     private $value;
 
+    /**
+     * @param Node    $node
+     * @param int     $i
+     */
     public function add($node, $i)
     {
         if ($this->children === null) {
@@ -29,6 +33,9 @@ abstract class Node
         $this->children[$i] = $node;
     }
 
+    /**
+     * @param Renderer $renderer
+     */
     public function childrenAccept(Renderer $renderer)
     {
         if ($this->children != null) {
@@ -39,30 +46,49 @@ abstract class Node
         }
     }
 
+    /**
+     * @param Renderer $renderer
+     */
     abstract public function accept(Renderer $renderer);
 
+    /**
+     * @return Node[]
+     */
     public function getChildren()
     {
         return $this->children;
     }
 
+    /**
+     * @return Node
+     */
     public function getParent()
     {
         return $this->parent;
     }
-
+    
+    /**
+     * @param Node $parent
+     */
     public function setParent($parent)
     {
         $this->parent = $parent;
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->value;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
     }
+    
 }
