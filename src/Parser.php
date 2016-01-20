@@ -309,7 +309,7 @@ class Parser {
 			case TokenManager::UNDERSCORE:		$s .= $this->consumeToken(TokenManager::UNDERSCORE)->image; break;
 			case TokenManager::BACKTICK:		$s .= $this->consumeToken(TokenManager::BACKTICK)->image; break;
  			default:
- 				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
+ 				if (!$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF))) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE: 	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
@@ -377,7 +377,7 @@ class Parser {
 			case TokenManager::RBRACK: 			$s .= $this->consumeToken(TokenManager::RBRACK)->image; break;
 			case TokenManager::RPAREN: 			$s .= $this->consumeToken(TokenManager::RPAREN)->image; break;
  			default:
- 				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
+ 				if (!$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF))) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
@@ -531,7 +531,7 @@ class Parser {
  			case TokenManager::RPAREN:			$s .= $this->consumeToken(TokenManager::RPAREN)->image; break;
  			case TokenManager::UNDERSCORE:		$s .= $this->consumeToken(TokenManager::UNDERSCORE)->image; break;
  			default:
- 				if (!$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF)) {
+ 				if (!$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF))) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
@@ -645,7 +645,7 @@ class Parser {
  			case TokenManager::LT:				$s .= $this->consumeToken(TokenManager::LT)->image; break;
  			case TokenManager::RPAREN:			$s .= $this->consumeToken(TokenManager::RPAREN)->image; break;
  			default:
- 				if (!$this->nextAfterSpace(TokenManager::RBRACK)) {
+ 				if (!$this->nextAfterSpace(array(TokenManager::RBRACK))) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB:		$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
@@ -688,7 +688,7 @@ class Parser {
  			case TokenManager::RBRACK:			$s .= $this->consumeToken(TokenManager::RBRACK)->image; break;
  			case TokenManager::UNDERSCORE:		$s .= $this->consumeToken(TokenManager::UNDERSCORE)->image; break;
  			default:
- 				if (!$this->nextAfterSpace(TokenManager::RPAREN)) {
+ 				if (!$this->nextAfterSpace(array(TokenManager::RPAREN))) {
  					switch ($this->getNextTokenKind()) {
  					case TokenManager::SPACE:		$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB:			$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
@@ -955,10 +955,10 @@ class Parser {
 			if($t->kind == $token) {
 				return true;
 			} else if($t->kind == TokenManager::EOL) {
-				$i = $this->skip($i+1, TokenManager::SPACE, TokenManager::TAB);
+				$i = $this->skip($i+1, array(TokenManager::SPACE, TokenManager::TAB));
 				$quoteLevel = $this->newQuoteLevel($i);
 				if($quoteLevel == $this->currentQuoteLevel) {
-					$i = $this->skip($i, TokenManager::SPACE, TokenManager::TAB, TokenManager::GT);
+					$i = $this->skip($i, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
 					if($this->getToken($i)->kind == $token
 						|| $this->getToken($i)->kind == TokenManager::EOL
 						|| $this->getToken($i)->kind == TokenManager::DASH
@@ -980,9 +980,9 @@ class Parser {
 
 	private function fencesAhead() {
 		if($this->getToken(1)->kind == TokenManager::EOL) {
-			$i = $this->skip(2, TokenManager::SPACE, TokenManager::TAB, TokenManager::GT);
+			$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
 			if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK) {
-				$i = $this->skip($i+3, TokenManager::SPACE, TokenManager::TAB);
+				$i = $this->skip($i+3, array(TokenManager::SPACE, TokenManager::TAB));
 				return $this->getToken($i)->kind == TokenManager::EOL || $this->getToken($i)->kind == TokenManager::EOF;
 			}
 		}
@@ -1019,10 +1019,10 @@ class Parser {
 
 	private function textAhead() {
 		if($this->getToken(1)->kind == TokenManager::EOL && $this->getToken(2)->kind != TokenManager::EOL) {
-			$i = $this->skip(2, TokenManager::SPACE, TokenManager::TAB);
+			$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB));
 			$quoteLevel = $this->newQuoteLevel($i);
 			if($quoteLevel == $this->currentQuoteLevel || !in_array(Module::BLOCKQUOTES, $this->modules)) {
-				$i = $this->skip($i, TokenManager::SPACE, TokenManager::TAB, TokenManager::GT);
+				$i = $this->skip($i, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
 				$t = $this->getToken($i);
 				return $this->getToken($i)->kind != TokenManager::EOL
 					&& !(in_array(Module::LISTS, $this->modules) && $t->kind == TokenManager::DASH)
@@ -1033,8 +1033,8 @@ class Parser {
 		return false;
 }
 
-	private function nextAfterSpace(...$tokens) {
-		$i = $this->skip(1, TokenManager::SPACE, TokenManager::TAB);
+	private function nextAfterSpace($tokens) {
+		$i = $this->skip(1, array(TokenManager::SPACE, TokenManager::TAB));
 		return in_array($this->getToken($i)->kind, $tokens);
 	}
 
@@ -1050,7 +1050,7 @@ class Parser {
 		}
 	}
 
-	private function skip($offset, ...$tokens) {
+	private function skip($offset, $tokens) {
 		for($i=$offset;;$i++) {
 			$t = $this->getToken($i);
 			if(!in_array($t->kind, $tokens) || $t->kind == TokenManager::EOF ) { return $i; }
@@ -1498,7 +1498,7 @@ class Parser {
 															if ($this->scanToken(TokenManager::RPAREN)) {
 																$this->scanPosition = $xsp;
 																$this->lookingAhead = true;
-																$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
+																$this->semanticLookAhead = !$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF));
 																$this->lookingAhead = false;
 																return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
 															}
@@ -1570,7 +1570,7 @@ class Parser {
 																		if ($this->scanToken(Tokenmanager::UNDERSCORE)) {
 																			$this->scanPosition = $xsp;
 																			$this->lookingAhead = true;
-																			$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
+																			$this->semanticLookAhead = !$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF));
 																			$this->lookingAhead = false;
 																			return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
 																		}
@@ -2026,7 +2026,7 @@ class Parser {
 																		if ($this->scanToken(TokenManager::UNDERSCORE)) {
 																			$this->scanPosition = $xsp;
 																			$this->lookingAhead = true;
-																			$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::RPAREN);
+																			$this->semanticLookAhead = !$this->nextAfterSpace(array(TokenManager::RPAREN));
 																			$this->lookingAhead = false;
 																			return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
 																		}
@@ -2127,7 +2127,7 @@ class Parser {
 														if ($this->scanToken(TokenManager::RPAREN)) {
 															$this->scanPosition = $xsp;
 															$this->lookingAhead = true;
-															$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::RBRACK);
+															$this->semanticLookAhead = !$this->nextAfterSpace(array(TokenManager::RBRACK));
 															$this->lookingAhead = false;
 															return (!$this->semanticLookAhead || $this->scanWhitspaceToken());
 														}
@@ -2344,7 +2344,7 @@ class Parser {
 																			if ($this->scanToken(TokenManager::BACKTICK)) {
 																				$this->scanPosition = $xsp;
 																				$this->lookingAhead = true;
-																				$this->semanticLookAhead = !$this->nextAfterSpace(TokenManager::EOL, TokenManager::EOF);
+																				$this->semanticLookAhead = !$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF));
 																				$this->lookingAhead = false;
 																				if (!$this->semanticLookAhead || $this->scanWhitspaceToken()) {
 																					$this->scanPosition = $xsp;
