@@ -125,7 +125,7 @@ class Html5Renderer implements Renderer
         if ($node->isNested() && ($node->getParent() instanceof ListItem) && $node->isSingleChild()) {
             $node->childrenAccept($this);
         } else {
-            $this->out .= indent();
+            $this->out .= $this->indent();
             $node->childrenAccept($this);
             if (!$node->isNested()) {
                 $this->out .= "\n";

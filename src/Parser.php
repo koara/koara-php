@@ -2,6 +2,7 @@
 namespace Koara;
 
 use Koara\Ast\BlockQuote;
+use Koara\Ast\BlockElement;
 use Koara\Ast\Code;
 use Koara\Ast\CodeBlock;
 use Koara\Ast\Document;
@@ -2516,7 +2517,7 @@ class Parser {
 		return $t;
 	}
 	
-	public function setModules(...$modules) {
+	public function setModules($modules) {
 		$this->modules = $modules;
 	}
 	
