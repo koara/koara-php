@@ -979,12 +979,10 @@ class Parser {
 	}
 
 	private function fencesAhead() {
-		if($this->getToken(1)->kind == TokenManager::EOL) {
-			$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
-			if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK) {
-				$i = $this->skip($i+3, array(TokenManager::SPACE, TokenManager::TAB));
-				return $this->getToken($i)->kind == TokenManager::EOL || $this->getToken($i)->kind == TokenManager::EOF;
-			}
+		$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
+		if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK) {
+			$i = $this->skip($i+3, array(TokenManager::SPACE, TokenManager::TAB));
+			return $this->getToken($i)->kind == TokenManager::EOL || $this->getToken($i)->kind == TokenManager::EOF;
 		}
 		return false;
 	}
