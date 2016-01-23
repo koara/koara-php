@@ -1028,12 +1028,12 @@ class EndToEndTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	private function assertOutput($file) {
-		$html = file_get_contents ( dirname ( __FILE__ ) . '/e2e/' . $file . '.htm' );
+		$html = file_get_contents ( dirname ( __FILE__ ) . '/testsuite/_e2e/html5/' . $file . '.htm' );
 		$html = mb_convert_encoding ( $html, 'UTF-8', mb_detect_encoding ( $html, 'UTF-8, ISO-8859-1', true ) );
 		
 		$parser = new Parser ();
 		$parser->setModules ( array_slice ( func_get_args (), 1 ) );
-		$document = $parser->parseFile ( dirname ( __FILE__ ) . '/e2e/e2e.kd' );
+		$document = $parser->parseFile ( dirname ( __FILE__ ) . '/testsuite/_e2e/koara/e2e.kd' );
 		$renderer = new Html5Renderer ();
 		$document->accept ( $renderer );
 		

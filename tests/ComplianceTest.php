@@ -9,7 +9,7 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 		$i=0;
 		$modules = scandir(dirname(__FILE__).'/testsuite');
 		foreach ($modules as $module) {
-			if($module != '.' && $module != '..') {
+			if($module != '.' && $module != '..' && substr($module, 0, 1) != '_') {
 				$testcases = scandir(dirname(__FILE__).'/testsuite/'.$module.'/koara');
 				foreach ($testcases as $testcase) {
 					if(substr($testcase, -3) == '.kd') {
