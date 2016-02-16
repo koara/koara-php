@@ -45,7 +45,7 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testKoaraToXml($module, $testcase) {
 		$xml = file_get_contents(dirname(__FILE__).'/testsuite/output/xml/'.$module.'/'.$testcase.'.xml');
-		$xml = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html, 'UTF-8, ISO-8859-1', true));
+		$xml = mb_convert_encoding($xml, 'UTF-8', mb_detect_encoding($xml, 'UTF-8, ISO-8859-1', true));
 			
 		$parser = new Parser();
 		$document = $parser->parseFile(dirname(__FILE__).'/testsuite/input/'.$module.'/'.$testcase.'.kd');
