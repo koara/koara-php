@@ -1,0 +1,64 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "967bf758180458ed7679aafe4e2faef0",
+    "content-hash": "5bd2f4f221435c126b6517ac07aae7ef",
+    "packages": [
+        {
+            "name": "koara/koara",
+            "version": "0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koara/koara-php.git",
+                "reference": "45d16c9ee36b9cd205d69dcfd590305a33b0f6ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koara/koara-php/zipball/45d16c9ee36b9cd205d69dcfd590305a33b0f6ff",
+                "reference": "45d16c9ee36b9cd205d69dcfd590305a33b0f6ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8 || ~5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Koara\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Van Den Heuvel",
+                    "email": "andy.vandenheuvel@gmail.com"
+                }
+            ],
+            "description": "Koara to HTML5 parser written in PHP",
+            "homepage": "https://github.com/koara/koara-php",
+            "keywords": [
+                "koara"
+            ],
+            "time": "2016-02-16 18:45:02"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4.0"
+    },
+    "platform-dev": []
+}
