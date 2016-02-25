@@ -7,6 +7,9 @@ php:
   - 7.0
   - hhvm
 
+matrix:
+  fast_finish: true
+
 sudo: false
 
 before_install:
@@ -14,3 +17,7 @@ before_install:
 
 install:
   - travis_retry composer install
+
+cache:
+  directories:
+    - $HOME/.composer/cache
