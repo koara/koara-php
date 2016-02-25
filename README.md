@@ -12,8 +12,8 @@
 ## Render Output 
 Most users are interested in rendering Koara as a specific output format. Every format is available as a seperate project.
 
-- HTML5:
-  [http://www.github.com/koara/koara-php-html5](http://www.github.com/koara/koara-php-html5)
+- Html:
+  [http://www.github.com/koara/koara-php-html](http://www.github.com/koara/koara-php-html)
   
 - XML:
   [http://www.github.com/koara/koara-php-xml](http://www.github.com/koara/koara-php-xml)

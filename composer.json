@@ -1,7 +1,7 @@
 {
     "name": "koara/koara",
     "type": "library",
-    "description": "Koara to HTML5 parser written in PHP",
+    "description": "Koara to Html parser written in PHP",
     "homepage": "https://github.com/koara/koara-php",
     "keywords": [
         "koara"
