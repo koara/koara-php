@@ -7,17 +7,9 @@ php:
   - 7.0
   - hhvm
 
-matrix:
-  fast_finish: true
-
 sudo: false
 
-before_install:
-  - travis_retry composer self-update && composer --version
+before_script:
+  - composer update --prefer-source --prefer-lowest --prefer-stable
 
-install:
-  - travis_retry composer install
-
-cache:
-  directories:
-    - $HOME/.composer/cache
+script: composer test
