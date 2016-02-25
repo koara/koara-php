@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/koara/koara-php.svg)](https://travis-ci.org/koara/koara-php)
 [![Coverage Status](https://img.shields.io/coveralls/koara/koara-php.svg)](https://coveralls.io/github/koara/koara-php?branch=master)
+[![Latest Version](https://img.shields.io/packagist/v/koara/koara.svg)](https://packagist.org/packages/koara/koara)
 [![Latest Version](https://img.shields.io/maven-central/v/io.koara/koara.svg?label=Maven Central)](http://search.maven.org/#search%7Cga%7C1%7Ckoara)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/koara/koara-php/blob/master/LICENSE)
 
