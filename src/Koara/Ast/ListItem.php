@@ -2,7 +2,7 @@
 
 namespace Koara\Ast;
 
-use Koara\Renderer\Renderer;
+use Koara\Renderer;
 
 class ListItem extends Node
 {
