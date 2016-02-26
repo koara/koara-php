@@ -1,6 +1,6 @@
 <?php
 
-namespace Koara\Renderer;
+namespace Koara;
 
 interface Renderer
 {
