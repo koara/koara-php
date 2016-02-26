@@ -12,4 +12,6 @@ sudo: false
 before_script:
   - composer update --prefer-source --prefer-lowest --prefer-stable
 
-script: composer install
+script: 
+  - composer install
+  - phpunit
