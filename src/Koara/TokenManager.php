@@ -60,7 +60,7 @@ class TokenManager
                 }
                 $this->matchedKind = 0x7fffffff;
                 $this->matchedPos = 0;
-                $curPos = $this->moveStringLiteralDfa0_0();
+                $curPos = $this->moveStringLiteralDfa0();
 
                 if ($this->matchedKind != 0x7fffffff) {
                     if ($this->matchedPos + 1 < $curPos) {
@@ -81,7 +81,7 @@ class TokenManager
                 $this->cs->getEndLine(), $this->cs->getEndColumn(), $this->cs->getImage());
     }
 
-    private function moveStringLiteralDfa0_0()
+    private function moveStringLiteralDfa0()
     {
     	$c = $this->ordutf8($this->curChar);
         switch ($c) {
@@ -96,13 +96,13 @@ class TokenManager
         case 60: return $this->stopAtPos(0, self::LT);
         case 61: return $this->stopAtPos(0, self::EQ);
         case 62: return $this->stopAtPos(0, self::GT);
-        case 73: return $this->moveStringLiteralDfa1_0(0x2000);
+        case 73: return $this->moveStringLiteralDfa1(0x2000);
         case 91: return $this->stopAtPos(0, self::LBRACK);
         case 92: return $this->startNfaWithStates(0, self::BACKSLASH, 7);
         case 93: return $this->stopAtPos(0, self::RBRACK);
         case 95: return $this->stopAtPos(0, self::UNDERSCORE);
         case 96: return $this->stopAtPos(0, self::BACKTICK);
-        case 105: return $this->moveStringLiteralDfa1_0(0x2000);
+        case 105: return $this->moveStringLiteralDfa1(0x2000);
         default: return $this->moveNfa(6, 0);
         }
     }
@@ -127,47 +127,47 @@ class TokenManager
         return $pos + 1;
     }
 
-    private function moveStringLiteralDfa1_0($active)
+    private function moveStringLiteralDfa1($active)
     {
         $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar) == 77 || $this->ordutf8($this->curChar) == 109) {
-            return $this->moveStringLiteralDfa2_0($active, 0x2000);
+            return $this->moveStringLiteralDfa2($active, 0x2000);
         }
 
         return $this->startNfa(0, $active);
     }
 
-    private function moveStringLiteralDfa2_0($old, $active)
+    private function moveStringLiteralDfa2($old, $active)
     {
         $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar == 65) || $this->ordutf8($this->curChar) == 97) {
-            return $this->moveStringLiteralDfa3_0($active, 0x2000);
+            return $this->moveStringLiteralDfa3($active, 0x2000);
         }
 
         return $this->startNfa(1, $active);
     }
 
-    private function moveStringLiteralDfa3_0($old, $active)
+    private function moveStringLiteralDfa3($old, $active)
     {
         $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar) == 71 || $this->ordutf8($this->curChar) == 103) {
-            return $this->moveStringLiteralDfa4_0($active, 0x2000);
+            return $this->moveStringLiteralDfa4($active, 0x2000);
         }
 
         return $this->startNfa(2, $active);
     }
 
-    private function moveStringLiteralDfa4_0($old, $active)
+    private function moveStringLiteralDfa4($old, $active)
     {
         $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar) == 69 || $this->ordutf8($this->curChar) == 101) {
-            return $this->moveStringLiteralDfa5_0($active, 0x2000);
+            return $this->moveStringLiteralDfa5($active, 0x2000);
         }
 
         return $this->startNfa(3, $active);
     }
 
-    private function moveStringLiteralDfa5_0($old, $active)
+    private function moveStringLiteralDfa5($old, $active)
     {
         $this->curChar = $this->cs->readChar();
         if ($this->ordutf8($this->curChar) == 58 && (($active & 0x2000) != 0)) {
