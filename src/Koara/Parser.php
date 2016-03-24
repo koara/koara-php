@@ -333,13 +333,7 @@ class Parser {
  	}
 	
  	private function paragraph() {
- 		$paragraph = null;
- 		if(in_array(Module::PARAGRAPHS, $this->modules)) {
- 			$paragraph = new Paragraph();			
- 		} else {
- 			$paragraph = new BlockElement();
- 		}
-		
+ 		$paragraph = in_array(Module::PARAGRAPHS, $this->modules) ? new Paragraph() : new BlockElement();
  		$this->tree->openScope();
  		$this->inline();
  		while ($this->textAhead()) {
@@ -1067,7 +1061,7 @@ class Parser {
 	}
 	
 	private function hasFencedCodeBlockAhead() {
-     	$this->lookAhead = 2147483647;
+     	$this->lookAhead = 3;
 	  	$this->lastPosition = $this->scanPosition = $this->token;
   		try {
     		return !$this->scanFencedCodeBlock();
@@ -2375,29 +2369,7 @@ class Parser {
 	}
 
 	private function scanFencedCodeBlock() {
-		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK)) {
-			return true;
-		}
- 		$xsp=null;
-		while (true) {
-			$xsp = $this->scanPosition;
-			if ($this->scanToken(TokenManager::BACKTICK)) {
-				$this->scanPosition = $xsp;
-				break;
-			}
-		}
-		if ($this->scanWhitspaceTokens()) {
-			return true;
-		}
-		$xsp = $this->scanPosition;
-		if ($this->scanForCodeLanguageElements()) {
-			$this->scanPosition = $xsp;
-		}
-		$xsp = $this->scanPosition;
-		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens()) {
-			$this->scanPosition = $xsp;
-		}
- 		return false;
+		return $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK);
 	}
 
 	private function scanBlockQuoteEmptyLines() {

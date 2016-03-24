@@ -108,10 +108,9 @@ class CharStream {
     public function getImage() {
         if ($this->bufpos >= $this->tokenBegin) {
         	return implode(array_slice($this->buffer, $this->tokenBegin, $this->bufpos - $this->tokenBegin + 1));
-        } else {
-        	return implode(array_slice($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin))
+        } 
+        return implode(array_slice($this->buffer, $this->tokenBegin, $this->bufsize - $this->tokenBegin))
         		.implode(array_slice($this->buffer, 0, $this->bufpos + 1));
-        }
     }
 
 	public function getEndColumn() {

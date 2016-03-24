@@ -21,6 +21,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Koara\\Html\\": "tests/Koara/Html/",
             "Koara\\": "src/Koara/"
         }
     }
