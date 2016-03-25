@@ -83,8 +83,8 @@ class TokenManager
 
     private function moveStringLiteralDfa0()
     {
-    	$c = $this->ordutf8($this->curChar);
-        switch ($c) {
+    	$ord = $this->ordutf8($this->curChar);
+        switch ($ord) {
         case 9:  return $this->startNfaWithStates(0, self::TAB, 8);
         case 32: return $this->startNfaWithStates(0, self::SPACE, 8);
         case 40: return $this->stopAtPos(0, self::LPAREN);
@@ -103,7 +103,7 @@ class TokenManager
         case 95: return $this->stopAtPos(0, self::UNDERSCORE);
         case 96: return $this->stopAtPos(0, self::BACKTICK);
         case 105: return $this->moveStringLiteralDfa1(0x2000);
-        default: return $this->moveNfa(6, 0);
+        default: return $this->moveNfa(6, 0, $ord);
         }
     }
 
@@ -117,7 +117,9 @@ class TokenManager
         	//echo $e;
             return $pos + 1;
         }
-        return $this->moveNfa($state, $pos + 1);
+        
+        $ord = $this->ordutf8($this->curChar); // TODO: REMOVE
+        return $this->moveNfa($state, $pos + 1, $ord);
     }
 
     private function stopAtPos($pos, $kind)
@@ -179,23 +181,24 @@ class TokenManager
 
     private function startNfa($pos, $active)
     {
-        return $this->moveNfa($this->stopStringLiteralDfa($pos, $active), $pos + 1);
+    	$ord = $this->ordutf8($this->curChar); // TODO: REMOVE
+        return $this->moveNfa($this->stopStringLiteralDfa($pos, $active), $pos + 1, $ord);
     }
 
-    private function moveNfa($startState, $curPos)
+    private function moveNfa($startState, $curPos, $ord)
     {
         $startsAt = 0;
         $this->jjnewStateCnt = 8;
         $i = 1;
         $this->jjstateSet[0] = $startState;
         $kind = 0x7fffffff;
+        
         while (true) {
             if (++$this->round == 0x7fffffff) {
                 $this->round = 0x80000001;
             }
-			$c = $this->ordutf8($this->curChar);
-            if ($c < 64) {
-                $l = 1 << $this->ordutf8($this->curChar);
+            if ($ord < 64) {
+                $l = 1 << $ord;
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
@@ -216,7 +219,7 @@ class TokenManager
                         } elseif ((0x100000200 & $l) != 0) {
                             $this->checkNAddStates(0, 2);
                         }
-                        if ($this->ordutf8($this->curChar) == 13) {
+                        if ($ord == 13) {
                             $this->jjstateSet[$this->jjnewStateCnt++] = 4;
                         }
                         break;
@@ -228,7 +231,7 @@ class TokenManager
                         } elseif ((0x100000200 & $l) != 0) {
                             $this->checkNAddStates(0, 2);
                         }
-                        if ($this->ordutf8($this->curChar) == 13) {
+                        if ($ord == 13) {
                             $this->jjstateSet[$this->jjnewStateCnt++] = 4;
                         }
                         break;
@@ -257,12 +260,12 @@ class TokenManager
                         }
                         break;
                     case 4:
-                        if ($c == 10 && $kind > 9) {
+                        if ($ord == 10 && $kind > 9) {
                             $kind = 9;
                         }
                         break;
                     case 5:
-                        if ($c == 13) {
+                        if ($ord == 13) {
                             $this->jjstateSet[$jjnewStateCnt++] = 4;
                         }
                         break;
@@ -273,8 +276,8 @@ class TokenManager
                         break;
                     }
                 } while ($i != $startsAt);
-            } elseif ($c < 128) {
-                $l = 1 << ($c & 077);
+            } elseif ($ord < 128) {
+                $l = 1 << ($ord & 077);
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
@@ -283,7 +286,7 @@ class TokenManager
                                 $kind = 4;
                             }
                             $this->checkNAdd(0);
-                        } elseif ($this->ordutf8($this->curChar) == 92) {
+                        } elseif ($ord == 92) {
                             $this->jjstateSet[$this->jjnewStateCnt++] = 7;
                         }
                         break;
@@ -331,6 +334,8 @@ class TokenManager
             	//echo $e;
                 return $curPos;
             }
+            
+            $ord = $this->ordutf8($this->curChar);
         }
     }
 
@@ -388,10 +393,10 @@ class TokenManager
     
     private function ordutf8($string, $offset = 0) {
     	$code = ord(substr($string, $offset,1));
-    	if ($code >= 128) {        //otherwise 0xxxxxxx
-    		if ($code < 224) $bytesnumber = 2;                //110xxxxx
-    		else if ($code < 240) $bytesnumber = 3;        //1110xxxx
-    		else if ($code < 248) $bytesnumber = 4;    //11110xxx
+    	if ($code >= 128) {        										//otherwise 0xxxxxxx
+    		if ($code < 224) $bytesnumber = 2;              			//110xxxxx
+    		else if ($code < 240) $bytesnumber = 3;        				//1110xxxx
+    		else if ($code < 248) $bytesnumber = 4;    					//11110xxx
     		$codetemp = $code - 192 - ($bytesnumber > 2 ? 32 : 0) - ($bytesnumber > 3 ? 16 : 0);
     		for ($i = 2; $i <= $bytesnumber; $i++) {
     			$offset ++;

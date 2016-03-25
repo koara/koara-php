@@ -288,8 +288,9 @@ class Parser {
  			$this->consumeToken(TokenManager::EOL);
  			$this->levelWhiteSpace($beginColumn);
  		}
- 		while ($this->fencedCodeBlockHasInlineTokens()) {
- 			switch ($this->getNextTokenKind()) {
+ 		$kind = $this->getNextTokenKind();
+ 		while ($kind != TokenManager::EOF && (($kind != TokenManager::EOL && $kind != TokenManager::BACKTICK) || !$this->fencesAhead())) {
+ 			switch ($kind) {
 			case TokenManager::CHAR_SEQUENCE: 	$s .= $this->consumeToken(TokenManager::CHAR_SEQUENCE)->image; break;
  			case TokenManager::ASTERISK: 		$s .= $this->consumeToken(TokenManager::ASTERISK)->image; break;
  			case TokenManager::BACKSLASH: 		$s .= $this->consumeToken(TokenManager::BACKSLASH)->image; break;
@@ -310,7 +311,7 @@ class Parser {
 			case TokenManager::BACKTICK:		$s .= $this->consumeToken(TokenManager::BACKTICK)->image; break;
  			default:
  				if (!$this->nextAfterSpace(array(TokenManager::EOL, TokenManager::EOF))) {
- 					switch ($this->getNextTokenKind()) {
+ 					switch ($kind) {
  					case TokenManager::SPACE: 	$s .= $this->consumeToken(TokenManager::SPACE)->image; break;
  					case TokenManager::TAB: 	$this->consumeToken(TokenManager::TAB); $s .= '    '; break;
  					}
@@ -320,6 +321,7 @@ class Parser {
  					$this->levelWhiteSpace($beginColumn);
  				}
  			}
+ 			$kind = $this->getNextTokenKind();
  		}
  		if ($this->fencesAhead()) {
  			$this->consumeToken(TokenManager::EOL);
@@ -973,11 +975,14 @@ class Parser {
 	}
 
 	private function fencesAhead() {
-		$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
-		if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK) {
-			$i = $this->skip($i+3, array(TokenManager::SPACE, TokenManager::TAB));
-			$t = $this->getToken($i);
-			return $t->kind == TokenManager::EOL || $t->kind == TokenManager::EOF;
+		$kind = $this->getNextTokenKind();
+    	if($kind != TokenManager::SPACE && $kind != TokenManager::TAB && $kind != TokenManager::GT) {
+			$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
+			if($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK) {
+				$i = $this->skip($i+3, array(TokenManager::SPACE, TokenManager::TAB));
+				$t = $this->getToken($i);
+				return $t->kind == TokenManager::EOL || $t->kind == TokenManager::EOF;
+			}
 		}
 		return false;
 	}
@@ -1190,16 +1195,6 @@ class Parser {
 		$this->lastPosition = $this->scanPosition = $this->token;
 		try {
 			return !$this->scanMoreBlockElements();
-		} catch (LookaheadSuccess $ls) {
-			return true;
-		}
-	}
-
-	private function fencedCodeBlockHasInlineTokens() {
-		$this->lookAhead = 1;
-		$this->lastPosition = $this->scanPosition = $this->token;
-		try {
-			return !$this->scanFencedCodeBlockTokens();
 		} catch (LookaheadSuccess $ls) {
 			return true;
 		}
