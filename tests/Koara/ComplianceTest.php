@@ -27,16 +27,16 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provider
 	 */
 	public function testKoaraToHtml5($module, $testcase) {		
-			$html = file_get_contents('testsuite/output/html5/'.$module.'/'.$testcase.'.htm');
-	  		$html = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html, 'UTF-8, ISO-8859-1', true));
+ 			$html = file_get_contents('testsuite/output/html5/'.$module.'/'.$testcase.'.htm');
+ 	  		$html = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html, 'UTF-8, ISO-8859-1', true));
 		 
-	  		$parser = new Parser();
-	  		$document = $parser->parseFile('testsuite/input/'.$module.'/'.$testcase.'.kd');
+ 	  		$parser = new Parser();
+ 	  		$document = $parser->parseFile('testsuite/input/'.$module.'/'.$testcase.'.kd');
  		
-	 		$renderer = new Html5Renderer();
-	 		$document->accept($renderer);
+ 	 		$renderer = new Html5Renderer();
+ 	 		$document->accept($renderer);
 	 		
-	 		$this->assertEquals($html, $renderer->getOutput());
+ 	 		$this->assertEquals($html, $renderer->getOutput());
 	}
 	
 

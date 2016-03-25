@@ -53,13 +53,14 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
+                	//echo $e;
                 	$this->matchedKind = 0;
                     $this->matchedPos = -1;
                     return $this->fillToken();
                 }
                 $this->matchedKind = 0x7fffffff;
                 $this->matchedPos = 0;
-                $curPos = $this->moveStringLiteralDfa0();
+                $curPos = $this->moveStringLiteralDfa0_0();
 
                 if ($this->matchedKind != 0x7fffffff) {
                     if ($this->matchedPos + 1 < $curPos) {
@@ -69,6 +70,7 @@ class TokenManager
                 }
             }
         } catch (Exception $e) {
+        	//echo $e;
             return;
         }
     }
@@ -79,10 +81,10 @@ class TokenManager
                 $this->cs->getEndLine(), $this->cs->getEndColumn(), $this->cs->getImage());
     }
 
-    private function moveStringLiteralDfa0()
+    private function moveStringLiteralDfa0_0()
     {
-    	$ord = $this->ordutf8($this->curChar);
-        switch ($ord) {
+    	$c = $this->ordutf8($this->curChar);
+        switch ($c) {
         case 9:  return $this->startNfaWithStates(0, self::TAB, 8);
         case 32: return $this->startNfaWithStates(0, self::SPACE, 8);
         case 40: return $this->stopAtPos(0, self::LPAREN);
@@ -94,14 +96,14 @@ class TokenManager
         case 60: return $this->stopAtPos(0, self::LT);
         case 61: return $this->stopAtPos(0, self::EQ);
         case 62: return $this->stopAtPos(0, self::GT);
-        case 73: return $this->moveStringLiteralDfa1(0x2000);
+        case 73: return $this->moveStringLiteralDfa1_0(0x2000);
         case 91: return $this->stopAtPos(0, self::LBRACK);
         case 92: return $this->startNfaWithStates(0, self::BACKSLASH, 7);
         case 93: return $this->stopAtPos(0, self::RBRACK);
         case 95: return $this->stopAtPos(0, self::UNDERSCORE);
         case 96: return $this->stopAtPos(0, self::BACKTICK);
-        case 105: return $this->moveStringLiteralDfa1(0x2000);
-        default: return $this->moveNfa(6, 0, $ord);
+        case 105: return $this->moveStringLiteralDfa1_0(0x2000);
+        default: return $this->moveNfa(6, 0);
         }
     }
 
@@ -111,12 +113,11 @@ class TokenManager
         $this->matchedPos = $pos;
         try {
             $this->curChar = $this->cs->readChar();
-	        $ord = $this->ordutf8($this->curChar);
-   		    return $this->moveNfa($state, $pos + 1, $ord);
         } catch (Exception $e) {
+        	//echo $e;
             return $pos + 1;
         }
-        
+        return $this->moveNfa($state, $pos + 1);
     }
 
     private function stopAtPos($pos, $kind)
@@ -126,80 +127,75 @@ class TokenManager
         return $pos + 1;
     }
 
-    private function moveStringLiteralDfa1($active)
+    private function moveStringLiteralDfa1_0($active)
     {
         $this->curChar = $this->cs->readChar();
-        $ord = $this->ordutf8($this->curChar);
-        if ($ord == 77 || $ord == 109) {
-            return $this->moveStringLiteralDfa2($active, 0x2000);
+        if ($this->ordutf8($this->curChar) == 77 || $this->ordutf8($this->curChar) == 109) {
+            return $this->moveStringLiteralDfa2_0($active, 0x2000);
         }
 
-        return $this->startNfa(0, $active, $ord);
+        return $this->startNfa(0, $active);
     }
 
-    private function moveStringLiteralDfa2($old, $active)
+    private function moveStringLiteralDfa2_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        $ord = $this->ordutf8($this->curChar);
-        if ($ord == 65 || $ord == 97) {
-            return $this->moveStringLiteralDfa3($active, 0x2000);
+        if ($this->ordutf8($this->curChar == 65) || $this->ordutf8($this->curChar) == 97) {
+            return $this->moveStringLiteralDfa3_0($active, 0x2000);
         }
 
-        return $this->startNfa(1, $active, $ord);
+        return $this->startNfa(1, $active);
     }
 
-    private function moveStringLiteralDfa3($old, $active)
+    private function moveStringLiteralDfa3_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        $ord = $this->ordutf8($this->curChar);
-        if ($ord == 71 || $ord == 103) {
-            return $this->moveStringLiteralDfa4($active, 0x2000);
+        if ($this->ordutf8($this->curChar) == 71 || $this->ordutf8($this->curChar) == 103) {
+            return $this->moveStringLiteralDfa4_0($active, 0x2000);
         }
 
-        return $this->startNfa(2, $active, $ord);
+        return $this->startNfa(2, $active);
     }
 
-    private function moveStringLiteralDfa4($old, $active)
+    private function moveStringLiteralDfa4_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        $ord = $this->ordutf8($this->curChar);
-        if ($ord == 69 || $ord == 101) {
-            return $this->moveStringLiteralDfa5($active, 0x2000);
+        if ($this->ordutf8($this->curChar) == 69 || $this->ordutf8($this->curChar) == 101) {
+            return $this->moveStringLiteralDfa5_0($active, 0x2000);
         }
 
-        return $this->startNfa(3, $active, $ord);
+        return $this->startNfa(3, $active);
     }
 
-    private function moveStringLiteralDfa5($old, $active)
+    private function moveStringLiteralDfa5_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        $ord = $this->ordutf8($this->curChar);
-        if ($ord == 58 && (($active & 0x2000) != 0)) {
+        if ($this->ordutf8($this->curChar) == 58 && (($active & 0x2000) != 0)) {
             return $this->stopAtPos(5, 13);
         }
 
-        return $this->startNfa(4, $active, $ord);
+        return $this->startNfa(4, $active);
     }
 
-    private function startNfa($pos, $active, $ord)
+    private function startNfa($pos, $active)
     {
-        return $this->moveNfa($this->stopStringLiteralDfa($pos, $active), $pos + 1, $ord);
+        return $this->moveNfa($this->stopStringLiteralDfa($pos, $active), $pos + 1);
     }
 
-    private function moveNfa($startState, $curPos, $ord)
+    private function moveNfa($startState, $curPos)
     {
         $startsAt = 0;
         $this->jjnewStateCnt = 8;
         $i = 1;
         $this->jjstateSet[0] = $startState;
         $kind = 0x7fffffff;
-        
         while (true) {
             if (++$this->round == 0x7fffffff) {
                 $this->round = 0x80000001;
             }
-            if ($ord < 64) {
-                $l = 1 << $ord;
+			$c = $this->ordutf8($this->curChar);
+            if ($c < 64) {
+                $l = 1 << $this->ordutf8($this->curChar);
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
@@ -220,7 +216,7 @@ class TokenManager
                         } elseif ((0x100000200 & $l) != 0) {
                             $this->checkNAddStates(0, 2);
                         }
-                        if ($ord == 13) {
+                        if ($this->ordutf8($this->curChar) == 13) {
                             $this->jjstateSet[$this->jjnewStateCnt++] = 4;
                         }
                         break;
@@ -232,7 +228,7 @@ class TokenManager
                         } elseif ((0x100000200 & $l) != 0) {
                             $this->checkNAddStates(0, 2);
                         }
-                        if ($ord == 13) {
+                        if ($this->ordutf8($this->curChar) == 13) {
                             $this->jjstateSet[$this->jjnewStateCnt++] = 4;
                         }
                         break;
@@ -261,12 +257,12 @@ class TokenManager
                         }
                         break;
                     case 4:
-                        if ($ord == 10 && $kind > 9) {
+                        if ($c == 10 && $kind > 9) {
                             $kind = 9;
                         }
                         break;
                     case 5:
-                        if ($ord == 13) {
+                        if ($c == 13) {
                             $this->jjstateSet[$jjnewStateCnt++] = 4;
                         }
                         break;
@@ -277,8 +273,8 @@ class TokenManager
                         break;
                     }
                 } while ($i != $startsAt);
-            } elseif ($ord < 128) {
-                $l = 1 << ($ord & 077);
+            } elseif ($c < 128) {
+                $l = 1 << ($c & 077);
                 do {
                     switch ($this->jjstateSet[--$i]) {
                     case 6:
@@ -287,7 +283,7 @@ class TokenManager
                                 $kind = 4;
                             }
                             $this->checkNAdd(0);
-                        } elseif ($ord == 92) {
+                        } elseif ($this->ordutf8($this->curChar) == 92) {
                             $this->jjstateSet[$this->jjnewStateCnt++] = 7;
                         }
                         break;
@@ -335,8 +331,6 @@ class TokenManager
             	//echo $e;
                 return $curPos;
             }
-            
-            $ord = $this->ordutf8($this->curChar);
         }
     }
 
@@ -394,10 +388,10 @@ class TokenManager
     
     private function ordutf8($string, $offset = 0) {
     	$code = ord(substr($string, $offset,1));
-    	if ($code >= 128) {        										//otherwise 0xxxxxxx
-    		if ($code < 224) $bytesnumber = 2;              			//110xxxxx
-    		else if ($code < 240) $bytesnumber = 3;        				//1110xxxx
-    		else if ($code < 248) $bytesnumber = 4;    					//11110xxx
+    	if ($code >= 128) {        //otherwise 0xxxxxxx
+    		if ($code < 224) $bytesnumber = 2;                //110xxxxx
+    		else if ($code < 240) $bytesnumber = 3;        //1110xxxx
+    		else if ($code < 248) $bytesnumber = 4;    //11110xxx
     		$codetemp = $code - 192 - ($bytesnumber > 2 ? 32 : 0) - ($bytesnumber > 3 ? 16 : 0);
     		for ($i = 2; $i <= $bytesnumber; $i++) {
     			$offset ++;
