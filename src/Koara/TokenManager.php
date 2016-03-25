@@ -53,7 +53,6 @@ class TokenManager
                 try {
                     $this->curChar = $this->cs->beginToken();
                 } catch (Exception $e) {
-                	//echo $e;
                 	$this->matchedKind = 0;
                     $this->matchedPos = -1;
                     return $this->fillToken();
@@ -70,7 +69,6 @@ class TokenManager
                 }
             }
         } catch (Exception $e) {
-        	//echo $e;
             return;
         }
     }
@@ -113,13 +111,12 @@ class TokenManager
         $this->matchedPos = $pos;
         try {
             $this->curChar = $this->cs->readChar();
+	        $ord = $this->ordutf8($this->curChar);
+   		    return $this->moveNfa($state, $pos + 1, $ord);
         } catch (Exception $e) {
-        	//echo $e;
             return $pos + 1;
         }
         
-        $ord = $this->ordutf8($this->curChar); // TODO: REMOVE
-        return $this->moveNfa($state, $pos + 1, $ord);
     }
 
     private function stopAtPos($pos, $kind)
@@ -132,56 +129,60 @@ class TokenManager
     private function moveStringLiteralDfa1($active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar) == 77 || $this->ordutf8($this->curChar) == 109) {
+        $ord = $this->ordutf8($this->curChar);
+        if ($ord == 77 || $ord == 109) {
             return $this->moveStringLiteralDfa2($active, 0x2000);
         }
 
-        return $this->startNfa(0, $active);
+        return $this->startNfa(0, $active, $ord);
     }
 
     private function moveStringLiteralDfa2($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar == 65) || $this->ordutf8($this->curChar) == 97) {
+        $ord = $this->ordutf8($this->curChar);
+        if ($ord == 65 || $ord == 97) {
             return $this->moveStringLiteralDfa3($active, 0x2000);
         }
 
-        return $this->startNfa(1, $active);
+        return $this->startNfa(1, $active, $ord);
     }
 
     private function moveStringLiteralDfa3($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar) == 71 || $this->ordutf8($this->curChar) == 103) {
+        $ord = $this->ordutf8($this->curChar);
+        if ($ord == 71 || $ord == 103) {
             return $this->moveStringLiteralDfa4($active, 0x2000);
         }
 
-        return $this->startNfa(2, $active);
+        return $this->startNfa(2, $active, $ord);
     }
 
     private function moveStringLiteralDfa4($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar) == 69 || $this->ordutf8($this->curChar) == 101) {
+        $ord = $this->ordutf8($this->curChar);
+        if ($ord == 69 || $ord == 101) {
             return $this->moveStringLiteralDfa5($active, 0x2000);
         }
 
-        return $this->startNfa(3, $active);
+        return $this->startNfa(3, $active, $ord);
     }
 
     private function moveStringLiteralDfa5($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar) == 58 && (($active & 0x2000) != 0)) {
+        $ord = $this->ordutf8($this->curChar);
+        if ($ord == 58 && (($active & 0x2000) != 0)) {
             return $this->stopAtPos(5, 13);
         }
 
-        return $this->startNfa(4, $active);
+        return $this->startNfa(4, $active, $ord);
     }
 
-    private function startNfa($pos, $active)
+    private function startNfa($pos, $active, $ord)
     {
-    	$ord = $this->ordutf8($this->curChar); // TODO: REMOVE
         return $this->moveNfa($this->stopStringLiteralDfa($pos, $active), $pos + 1, $ord);
     }
 
