@@ -150,7 +150,8 @@ class TokenManager
     private function moveStringLiteralDfa3_0($old, $active)
     {
         $this->curChar = $this->cs->readChar();
-        if ($this->ordutf8($this->curChar) == 71 || $this->ordutf8($this->curChar) == 103) {
+        $ord = $this->ordutf8($this->curChar);
+        if ($ord == 71 || $ord == 103) {
             return $this->moveStringLiteralDfa4_0($active, 0x2000);
         }
 
