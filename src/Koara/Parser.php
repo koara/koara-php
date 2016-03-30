@@ -41,9 +41,7 @@ class Parser {
 
  	public function __construct() {
  		$this->lookAheadSuccess = new LookaheadSuccess();
- 		$this->modules = array(Module::PARAGRAPHS, Module::HEADINGS, Module::LISTS, Module::LINKS, 
- 				Module::IMAGES, Module::FORMATTING, Module::BLOCKQUOTES, Module::CODE
- 		);
+ 		$this->modules = array("paragraphs", "headings", "lists", "links", "images", "formatting", "blockquotes", "code");
  	}
  	
  	/**
@@ -99,15 +97,15 @@ class Parser {
 	
  	private function blockElement() {
  		$this->currentBlockLevel++;
- 		if (in_array(Module::HEADINGS, $this->modules) && $this->headingAhead(1)) {
+ 		if (in_array("headings", $this->modules) && $this->headingAhead(1)) {
  			$this->heading();
- 		} else if(in_array(Module::BLOCKQUOTES, $this->modules) && $this->getNextTokenKind() == TokenManager::GT) {
+ 		} else if(in_array("blockquotes", $this->modules) && $this->getNextTokenKind() == TokenManager::GT) {
  			$this->blockquote();
- 		} else if(in_array(Module::LISTS, $this->modules) && $this->getNextTokenKind() == TokenManager::DASH) {
+ 		} else if(in_array("lists", $this->modules) && $this->getNextTokenKind() == TokenManager::DASH) {
  			$this->unorderedList();
- 		} else if(in_array(Module::LISTS, $this->modules) && $this->hasOrderedListAhead()) {
+ 		} else if(in_array("lists", $this->modules) && $this->hasOrderedListAhead()) {
  			$this->orderedList();
- 		} else if(in_array(Module::CODE, $this->modules) && $this->hasFencedCodeBlockAhead()) {
+ 		} else if(in_array("code", $this->modules) && $this->hasFencedCodeBlockAhead()) {
  			$this->fencedCodeBlock();
  		} else {
  			$this->paragraph();
@@ -128,15 +126,15 @@ class Parser {
  	    while ($this->headingHasInlineElementsAhead()) {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::FORMATTING, $this->modules) && $this->hasStrongAhead()) {
+ 			} else if (in_array("formatting", $this->modules) && $this->hasStrongAhead()) {
  				$this->strong();
- 			} else if (in_array(Module::FORMATTING, $this->modules) && $this->hasEmAhead()) {
+ 			} else if (in_array("formatting", $this->modules) && $this->hasEmAhead()) {
  				$this->em();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else {
 				$this->looseChar();
@@ -334,7 +332,7 @@ class Parser {
 	
  	private function paragraph() {
  		$paragraph = null;
- 		if(in_array(Module::PARAGRAPHS, $this->modules)) {
+ 		if(in_array("paragraphs", $this->modules)) {
  			$paragraph = new Paragraph();			
  		} else {
  			$paragraph = new BlockElement();
@@ -345,7 +343,7 @@ class Parser {
  		while ($this->textAhead()) {
  			$this->lineBreak();
  			$this->whiteSpace();
- 			if(in_array(Module::BLOCKQUOTES, $this->modules)) {
+ 			if(in_array("blockquotes", $this->modules)) {
  				while ($this->getNextTokenKind() == TokenManager::GT) {
  					$this->consumeToken(TokenManager::GT);
  					$this->whiteSpace();
@@ -421,13 +419,13 @@ class Parser {
  		$this->consumeToken(TokenManager::LBRACK);
  		$this->whiteSpace();
  		while ($this->linkHasAnyElements()) {
- 			if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::FORMATTING, $this->modules) && $this->hasStrongAhead()) {
+ 			} else if (in_array("formatting", $this->modules) && $this->hasStrongAhead()) {
  				$this->strong();
- 			} else if (in_array(Module::FORMATTING, $this->modules) && $this->hasEmAhead()) {
+ 			} else if (in_array("formatting", $this->modules) && $this->hasEmAhead()) {
  				$this->em();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else if ($this->hasResourceTextAhead()) {
  				$this->resourceText();
@@ -451,11 +449,11 @@ class Parser {
  		while ($this->strongHasElements()) {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImage()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImage()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->multilineAhead(TokenManager::BACKTICK)) {
+ 			} else if (in_array("code", $this->modules) && $this->multilineAhead(TokenManager::BACKTICK)) {
  				$this->codeMultiline();
  			} else if ($this->strongEmWithinStrongAhead()) {
  				$this->emWithinStrong();
@@ -478,11 +476,11 @@ class Parser {
  		while ($this->emHasElements()) {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImage()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImage()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else if ($this->emHasStrongWithinEm()) {
  				$this->strongWithinEm();
@@ -609,15 +607,15 @@ class Parser {
  		do {
  			if ($this->hasInlineTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::FORMATTING, $this->modules) && $this->multilineAhead(TokenManager::ASTERISK)) {
+ 			} else if (in_array("formatting", $this->modules) && $this->multilineAhead(TokenManager::ASTERISK)) {
  				$this->strongMultiline();
- 			} else if (in_array(Module::FORMATTING, $this->modules) && $this->multilineAhead(TokenManager::UNDERSCORE)) {
+ 			} else if (in_array("formatting", $this->modules) && $this->multilineAhead(TokenManager::UNDERSCORE)) {
  				$this->emMultiline();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->multilineAhead(TokenManager::BACKTICK)) {
+ 			} else if (in_array("code", $this->modules) && $this->multilineAhead(TokenManager::BACKTICK)) {
  				$this->codeMultiline();
  			} else {
  				$this->looseChar();
@@ -716,11 +714,11 @@ class Parser {
  		do {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
 				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else if ($this->hasEmWithinStrongMultiline()) {
  				$this->emWithinStrongMultiline();
@@ -751,11 +749,11 @@ class Parser {
  		do {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else {
  				switch ($this->getNextTokenKind()) {
@@ -774,11 +772,11 @@ class Parser {
  		do {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
 				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else {
  				switch ($this->getNextTokenKind()) {
@@ -809,11 +807,11 @@ class Parser {
  		do {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
 				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->multilineAhead(TokenManager::BACKTICK)) {
+ 			} else if (in_array("code", $this->modules) && $this->multilineAhead(TokenManager::BACKTICK)) {
  				$this->codeMultiline();
  			} else if ($this->hasStrongWithinEmMultilineAhead()) {
  				$this->strongWithinEmMultiline();
@@ -844,11 +842,11 @@ class Parser {
  		do {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else {
  				switch ($this->getNextTokenKind()) {
@@ -867,11 +865,11 @@ class Parser {
  		do {
  			if ($this->hasTextAhead()) {
  				$this->text();
- 			} else if (in_array(Module::IMAGES, $this->modules) && $this->hasImageAhead()) {
+ 			} else if (in_array("images", $this->modules) && $this->hasImageAhead()) {
  				$this->image();
- 			} else if (in_array(Module::LINKS, $this->modules) && $this->hasLinkAhead()) {
+ 			} else if (in_array("links", $this->modules) && $this->hasLinkAhead()) {
  				$this->link();
- 			} else if (in_array(Module::CODE, $this->modules) && $this->hasCodeAhead()) {
+ 			} else if (in_array("code", $this->modules) && $this->hasCodeAhead()) {
  				$this->code();
  			} else {
  				switch ($this->getNextTokenKind()) {
@@ -1020,13 +1018,13 @@ class Parser {
 		if($this->getToken(1)->kind == TokenManager::EOL && $this->getToken(2)->kind != TokenManager::EOL) {
 			$i = $this->skip(2, array(TokenManager::SPACE, TokenManager::TAB));
 			$quoteLevel = $this->newQuoteLevel($i);
-			if($quoteLevel == $this->currentQuoteLevel || !in_array(Module::BLOCKQUOTES, $this->modules)) {
+			if($quoteLevel == $this->currentQuoteLevel || !in_array("blockquotes", $this->modules)) {
 				$i = $this->skip($i, array(TokenManager::SPACE, TokenManager::TAB, TokenManager::GT));
 				$t = $this->getToken($i);
 				return $this->getToken($i)->kind != TokenManager::EOL
-					&& !(in_array(Module::LISTS, $this->modules) && $t->kind == TokenManager::DASH)
-					&& !(in_array(Module::LISTS, $this->modules) && $t->kind == TokenManager::DIGITS && $this->getToken($i+1)->kind == TokenManager::DOT) && !($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK)
-	                && !(in_array(Module::HEADINGS, $this->modules) && $this->headingAhead($i));
+					&& !(in_array("lists", $this->modules) && $t->kind == TokenManager::DASH)
+					&& !(in_array("lists", $this->modules) && $t->kind == TokenManager::DIGITS && $this->getToken($i+1)->kind == TokenManager::DOT) && !($this->getToken($i)->kind == TokenManager::BACKTICK && $this->getToken($i+1)->kind == TokenManager::BACKTICK && $this->getToken($i+2)->kind == TokenManager::BACKTICK)
+	                && !(in_array("headings", $this->modules) && $this->headingAhead($i));
  	        } 
  		}
 		return false;
@@ -2252,32 +2250,6 @@ class Parser {
 		return false;
 	}
 
-	private function scanForCodeLanguageElement() {
-		$xsp = $this->scanPosition;
-		if ($this->scanToken(TokenManager::CHAR_SEQUENCE)) {
-			$this->scanPosition = $xsp;
-			if ($this->scanToken(TokenManager::BACKTICK)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private function scanForCodeLanguageElements() {
-		if ($this->scanForCodeLanguageElement()) {
-			return true;
-		}
-		$xsp=null;
-		while (true) {
-			$xsp = $this->scanPosition;
-			if ($this->scanForCodeLanguageElement()) {
-				$this->scanPosition = $xsp;
-				break;
-			}
-		}
-		return false;
-	}
-
 	private function scanWhitspaceToken() {
 		$xsp = $this->scanPosition;
 		if ($this->scanToken(TokenManager::SPACE)) {
@@ -2375,29 +2347,7 @@ class Parser {
 	}
 
 	private function scanFencedCodeBlock() {
-		if ($this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK)) {
-			return true;
-		}
- 		$xsp=null;
-		while (true) {
-			$xsp = $this->scanPosition;
-			if ($this->scanToken(TokenManager::BACKTICK)) {
-				$this->scanPosition = $xsp;
-				break;
-			}
-		}
-		if ($this->scanWhitspaceTokens()) {
-			return true;
-		}
-		$xsp = $this->scanPosition;
-		if ($this->scanForCodeLanguageElements()) {
-			$this->scanPosition = $xsp;
-		}
-		$xsp = $this->scanPosition;
-		if ($this->scanToken(TokenManager::EOL) || $this->scanWhitspaceTokens()) {
-			$this->scanPosition = $xsp;
-		}
- 		return false;
+		return $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK) || $this->scanToken(TokenManager::BACKTICK);
 	}
 
 	private function scanBlockQuoteEmptyLines() {
