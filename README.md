@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/koara/koara-php.svg)](https://travis-ci.org/koara/koara-php)
 [![Coverage Status](https://img.shields.io/coveralls/koara/koara-php.svg)](https://coveralls.io/github/koara/koara-php?branch=master)
-[![Latest Version](https://img.shields.io/maven-central/v/io.koara/koara.svg?label=Maven Central)](http://search.maven.org/#search%7Cga%7C1%7Ckoara)
+[![Latest Version](https://img.shields.io/packagist/v/koara/koara.svg)](https://packagist.org/packages/koara/koara)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/koara/koara-php/blob/master/LICENSE)
 
 # Koara-php
@@ -10,7 +10,7 @@
 If you are interested in converting koara to a specific outputFormat, please look the [Related Projects](#related-projects) section.
 
 ## Getting started
-- Download [ZIP file]()
+- Download [ZIP file](https://github.com/koara/koara-php/archive/0.10.zip)
 - Composer
 
   ``` bash
@@ -26,8 +26,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Koara\Parser;
 
 $parser = new Parser();
-$document1 = $parser->parse("Hello World!"); // parse a string
-$document2 = $parser->parseFile('hello.kd'); // parse a file
+$result1 = $parser->parse("Hello World!"); // parse a string
+$result2 = $parser->parseFile('hello.kd'); // parse a file
 
 ?>
 ```
