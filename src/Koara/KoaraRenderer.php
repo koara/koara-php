@@ -121,13 +121,14 @@ class KoaraRenderer implements Renderer
 // 			indent();
 // 		}
  		$node->childrenAccept($this);
-// 		out.append("\n");
-// 		if(!node.isNested() || (node.getParent() instanceof ListItem && (node.next() instanceof Paragraph) && !node.isLastChild())) {
-// 			out.append("\n");
-// 		} else if(node.getParent() instanceof BlockQuote && (node.next() instanceof Paragraph)) {
-// 			indent();
-// 			out.append("\n");
-// 		}
+ 		$this->out .= "\n";
+ 		
+ 		if(!$node->isNested() || ($node->getParent() instanceof ListItem && ($node->next() instanceof Paragraph) && !$node->isLastChild())) {
+ 			$this->out .= "\n";
+ 		} else if($node->getParent() instanceof BlockQuote && ($node->next() instanceof Paragraph)) {
+ 			indent();
+ 			$this->out .= "\n";
+ 		}
  	}
 
  	public function visitBlockElement($node)
@@ -220,7 +221,7 @@ class KoaraRenderer implements Renderer
  		$text = preg_replace("/=/", "\=", $text, 1);
  		$text = preg_replace("/>/", "\>", $text, 1);
  		$text = preg_replace("/-/", "\-", $text, 1);
- 		
+ 		$text = preg_replace("/\\\\/", "X", $text, 1); //backlash
  		return $text;
 
 // 				.replaceFirst("(\\d+)\\.", "\\\\$1.");
