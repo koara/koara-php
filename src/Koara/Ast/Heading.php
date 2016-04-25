@@ -15,4 +15,9 @@ class Heading extends BlockElement
         $renderer->visitHeading($this);
     }
     
+    public function getLevel()
+    {
+    	return $this->getValue();
+    }
+    
 }

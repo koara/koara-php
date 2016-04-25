@@ -12,31 +12,34 @@ class KoaraRenderer implements Renderer
      */
     private $out;
     
-// 	private Stack<String> left;
-	
+    /**
+     * @var string[]
+     */
+    private $left = [];
+    
 	public function visitDocument($node)
 	{
-// 		left = new Stack<String>();
+ 		$this->left = [];
 		$node->childrenAccept($this);
 	}
 	
 	public function visitHeading($node)
 	{
-// 		if(!node.isFirstChild()) {
-// 			indent();
-// 		}
-// 		for(int i=0; i<node.getLevel(); i++) {
-// 			out.append("=");
-// 		}
-// 		if(node.hasChildren()) {
-// 		  out.append(" ");
-// 		  node.childrenAccept(this);
-// 		}
-// 		out.append("\n");
-// 		if(!node.isLastChild()) {
-// 			indent();
-// 			out.append("\n");
-// 		}
+ 		if(!$node->isFirstChild()) {
+ 			$this->indent();
+ 		}
+ 		for($i=0; $i<$node->getLevel(); $i++) {
+ 			$this->out .= "=";
+ 		}
+ 		if($node->hasChildren()) {
+ 		  $this->out .= " ";
+ 		  $node->childrenAccept($this);
+ 		}
+ 		$this->out .= "\n";
+ 		if(!$node->isLastChild()) {
+ 			$this->indent();
+ 			$this->out .= "\n";
+ 		}
  	}
 
  	public function visitBlockQuote($node)
@@ -221,17 +224,15 @@ class KoaraRenderer implements Renderer
  		$text = preg_replace("/=/", "\=", $text, 1);
  		$text = preg_replace("/>/", "\>", $text, 1);
  		$text = preg_replace("/-/", "\-", $text, 1);
- 		$text = preg_replace("/\\\\/", "X", $text, 1); //backlash
+ 		$text = preg_replace("/(\d)\./", "\\\\$1.", $text, 1); //backlash
  		return $text;
-
-// 				.replaceFirst("(\\d+)\\.", "\\\\$1.");
  	}
 	
-// 	private void indent() {
+ 	private function indent() {
 // 		for(String s : left) {
 // 			out.append(s);
 // 		}
-// 	}
+ 	}
 
  	public function getOutput() {
  		return trim($this->out);

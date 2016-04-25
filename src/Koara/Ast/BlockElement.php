@@ -10,6 +10,28 @@ class BlockElement extends Node
 	/**
 	 * @return bool
 	 */
+	public function hasChildren() {
+		return $this->getChildren() != null && sizeof($this->getChildren()) > 0;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isFirstChild() {
+		return $this->getParent()->getChildren()[0] === $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isLastChild() {
+		$children = $this->getParent()->getChildren();
+		return $children[sizeof($children) - 1] === $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
     public function isNested()
     {
         return !($this->getParent() instanceof Document);
