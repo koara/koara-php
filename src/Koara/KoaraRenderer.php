@@ -64,34 +64,34 @@ class KoaraRenderer implements Renderer
 	public function visitListBlock($node)
 	{
 		$node->childrenAccept($this);
-// 		if(!node.isLastChild()) {
-// 			indent();
-// 			out.append("\n");
-// 			Object next = node.next();
-// 			if(next instanceof ListBlock && ((ListBlock) next).isOrdered() == node.isOrdered() ) {
-// 				out.append("\n");
-// 			}
-// 		}
+ 		if(!$node->isLastChild()) {
+ 			$this->indent();
+ 			$this->out .= "\n";
+ 			$next = $node->next();
+ 			if(get_class($next) === 'Koara\Ast\ListBlock' && $next->isOrdered() == $node->isOrdered()) {
+ 				$this->out .= "\n";
+ 			}
+ 		}
  	}
 
 	public function visitListItem($node)
 	{
-// 		if(!node.getParent().isNested() || !node.isFirstChild() || !node.getParent().isFirstChild()) {
-// 			indent();
-// 		}
-// 		left.push("  ");
-// 		if(node.getNumber() != null) {			
-// 			out.append(node.getNumber() + ".");
-// 		} else {
-// 			out.append("-");
-// 		}
-// 		if(node.hasChildren()) {
-// 			out.append(" ");
-// 			node.childrenAccept(this);
-// 		} else {
-// 			out.append("\n");
-// 		}
-// 		left.pop();
+ 		if(!$node->getParent()->isNested() || !$node->isFirstChild() || !$node->getParent()->isFirstChild()) {
+ 			$this->indent();
+ 		}
+ 		$this->left[] = "  ";
+ 		if($node->getNumber() != null) {			
+ 			$this->out .= $node->getNumber().".";
+ 		} else {
+ 			$this->out .= "-";
+ 		}
+ 		if($node->hasChildren()) {
+ 			$this->out .= " ";
+ 			$node->childrenAccept($this);
+ 		} else {
+ 			$this->out .= "\n";
+ 		}
+ 		array_pop($this->left);
  	}
 
  	public function visitCodeBlock($node)
@@ -120,15 +120,15 @@ class KoaraRenderer implements Renderer
 
 	public function visitParagraph($node)
 	{
-// 		if(!node.isFirstChild()) {
-// 			indent();
-// 		}
+ 		if(!$node->isFirstChild()) {
+ 			$this->indent();
+ 		}
  		$node->childrenAccept($this);
  		$this->out .= "\n";
  		
- 		if(!$node->isNested() || ($node->getParent() instanceof ListItem && ($node->next() instanceof Paragraph) && !$node->isLastChild())) {
+ 		if(!$node->isNested() || (get_class($node->getParent()) === 'Koara\Ast\ListItem' && (get_class($node->next()) === 'Koara\Ast\Paragraph') && !$node->isLastChild())) {
  			$this->out .= "\n";
- 		} else if($node->getParent() instanceof BlockQuote && ($node->next() instanceof Paragraph)) {
+ 		} else if(get_class($node->getParent()) === 'Koara\Ast\BlockQuote' && (get_class($node->next()) === 'Koara\Ast\Paragraph')) {
  			indent();
  			$this->out .= "\n";
  		}
@@ -151,26 +151,26 @@ class KoaraRenderer implements Renderer
 
  	public function visitImage($node)
 	{
-// 		out.append("[image: ");
-// 		node.childrenAccept(this);
-// 		out.append("]");
-// 		if(node.getValue() != null && node.getValue().toString().trim().length() > 0) {
-// 			out.append("(");
-// 			out.append(escapeUrl(node.getValue().toString()));
-// 			out.append(")");
-// 		}
+ 		$this->out .= "[image: ";
+ 		$node->childrenAccept($this);
+ 		$this->out .= "]";
+ 		if($node->getValue() != null && strlen(trim($node->getValue())) > 0) {
+ 			$this->out .= "(";
+ 			$this->out .= $this->escapeUrl($node->getValue());
+ 			$this->out .= ")";
+ 		}
  	}
 
  	public function visitLink($node)
 	{
-// 		out.append("[");
-// 		node.childrenAccept(this);
-// 		out.append("]");
-// 		if(node.getValue() != null && node.getValue().toString().trim().length() > 0) {
-// 			out.append("(");
-// 			out.append(escapeUrl(node.getValue().toString()));
-// 			out.append(")");
-// 		}
+ 		$this->out .= "[";
+ 		$node->childrenAccept($this);
+ 		$this->out .= "]";
+ 		if($node->getValue() != null && strlen(trim($node->getValue())) > 0) {
+ 			$this->out .= "(";
+ 			$this->out .= $this->escapeUrl($node->getValue());
+ 			$this->out .= ")";
+ 		}
  	}
 
  	public function visitText($node)
@@ -206,13 +206,16 @@ class KoaraRenderer implements Renderer
  	public function visitLineBreak($node)
 	{
  		$this->out .= "\n";
-// 		indent();
+ 		$this->indent();
  	}
 	
-// 	public String escapeUrl(String text) {
-// 		return text.replaceAll("\\(", "\\\\(")
-// 				.replaceAll("\\)", "\\\\)");
-// 	}
+ 	public function escapeUrl($text) {
+ 		return str_replace(
+ 				array("(", ")"),
+ 				array("\(", "\)"),
+ 				$text
+ 		);
+ 	}
 	
  	public function escape($text) {
  		$text = str_replace(
@@ -229,9 +232,9 @@ class KoaraRenderer implements Renderer
  	}
 	
  	private function indent() {
-// 		for(String s : left) {
-// 			out.append(s);
-// 		}
+ 		for($i = 0; $i < sizeof($this->left); $i++) {
+ 			$this->out .= $this->left[$i];
+ 		}
  	}
 
  	public function getOutput() {

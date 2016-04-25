@@ -36,6 +36,8 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 		$document = $parser->parseFile('testsuite/input/'.$module.'/'.$testcase.'.kd');
 		$renderer = new KoaraRenderer();
 		$document->accept($renderer);
+		
+		echo "\n\n".$renderer->getOutput();
        
         $this->assertEquals($expected, $renderer->getOutput());
 

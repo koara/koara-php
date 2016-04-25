@@ -46,6 +46,18 @@ class BlockElement extends Node
     }
 
     /**
+     * @return mixed
+     */
+    public function next() {
+    	for($i = 0; $i < sizeof($this->getParent()->getChildren()) - 1; $i++) {
+    		if($this->getParent()->getChildren()[$i] === $this) {
+    			return $this->getParent()->getChildren()[$i + 1];
+    		}
+    	}
+    	return null;
+    }
+    
+    /**
      * @param Renderer $renderer
      */
     public function accept(Renderer $renderer)

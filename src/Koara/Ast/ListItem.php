@@ -4,7 +4,7 @@ namespace Koara\Ast;
 
 use Koara\Renderer;
 
-class ListItem extends Node
+class ListItem extends BlockElement
 {
     /**
      * @var int
