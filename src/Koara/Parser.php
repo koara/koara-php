@@ -704,6 +704,7 @@ class Parser {
  		$this->strongMultilineContent();
  		while ($this->textAhead()) {
  			$this->lineBreak();
+ 			$this->whiteSpace();
  			$this->strongMultilineContent();
  		}
  		$this->consumeToken(TokenManager::ASTERISK);
@@ -739,6 +740,7 @@ class Parser {
  		$this->strongWithinEmMultilineContent();
  		while ($this->textAhead()) {
  			$this->lineBreak();
+ 			$this->whiteSpace();
  			$this->strongWithinEmMultilineContent();
  		}
  		$this->consumeToken(TokenManager::ASTERISK);
@@ -797,6 +799,7 @@ class Parser {
  		$this->emMultilineContent();
  		while ($this->textAhead()) {
  			$this->lineBreak();
+ 			$this->whiteSpace();
  			$this->emMultilineContent();
  		}
  		$this->consumeToken(TokenManager::UNDERSCORE);
@@ -832,6 +835,7 @@ class Parser {
  		$this->emWithinStrongMultilineContent();
  		while ($this->textAhead()) {
  			$this->lineBreak();
+ 			$this->whiteSpace();
  			$this->emWithinStrongMultilineContent();
  		}
  		$this->consumeToken(TokenManager::UNDERSCORE);

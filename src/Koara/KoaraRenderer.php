@@ -44,21 +44,21 @@ class KoaraRenderer implements Renderer
 
  	public function visitBlockQuote($node)
 	{
-// 		if(!node.isFirstChild()) {
-// 			indent();
-// 		}
+ 		if(!$node->isFirstChild()) {
+ 			$this->indent();
+ 		}
 		
-// 		if(node.hasChildren()) {
-// 			out.append("> ");
-// 			left.push("> ");
-// 			node.childrenAccept(this);
-// 			left.pop();
-// 		} else {
-// 			out.append(">\n");
-// 		}
-// 		if(!node.isNested()) {
-// 			out.append("\n");
-// 		}
+ 		if($node->hasChildren()) {
+ 			$this->out .= "> ";
+ 			$this->left[] = "> ";
+ 			$node->childrenAccept($this);
+ 			array_pop($this->left);
+ 		} else {
+ 			$this->out .= ">\n";
+ 		}
+ 		if(!$node->isNested()) {
+ 			$this->out .= "\n";
+ 		}
  	}
 
 	public function visitListBlock($node)
@@ -96,27 +96,23 @@ class KoaraRenderer implements Renderer
 
  	public function visitCodeBlock($node)
 	{
-// 		StringBuilder indent = new StringBuilder();
-// 		for(String s : left) {
-// 			indent.append(s);
-// 		}
+ 		$indent = "";
+ 		for($i = 0; $i < sizeof($this->left); $i++) {
+ 			$indent .= $this->left[$i];
+ 		}
 		
-// 		out.append("```");
-// 		if(node.getLanguage() != null) {
-// 			out.append(node.getLanguage());
-// 		}
-// 		out.append("\n");
-	}
-		
-		
-// 		out.append(node.getValue().toString().replaceAll("(?m)^", indent.toString()));
-// 		out.append("\n");
-// 		indent();
-// 		out.append("```");
-		
-// 		out.append("\n");
-// 		out.append("\n");
-// 	}
+ 		$this->out .= "```";
+ 		if($node->getLanguage() != null) {
+ 			$this->out .= $node->getLanguage();
+ 		}
+ 		$this->out .= "\n";
+		$this->out .= preg_replace("/(?m)^/", $indent, $node->getValue());
+		$this->out .= "\n";
+		$this->indent();
+		$this->out .= "```";
+		$this->out .= "\n";
+		$this->out .= "\n";
+ 	}
 
 	public function visitParagraph($node)
 	{
@@ -129,24 +125,24 @@ class KoaraRenderer implements Renderer
  		if(!$node->isNested() || (get_class($node->getParent()) === 'Koara\Ast\ListItem' && (get_class($node->next()) === 'Koara\Ast\Paragraph') && !$node->isLastChild())) {
  			$this->out .= "\n";
  		} else if(get_class($node->getParent()) === 'Koara\Ast\BlockQuote' && (get_class($node->next()) === 'Koara\Ast\Paragraph')) {
- 			indent();
+ 			$this->indent();
  			$this->out .= "\n";
  		}
  	}
 
  	public function visitBlockElement($node)
 	{
-// 		if(!node.isFirstChild()) {
-// 			indent();
-// 		}
-// 		node.childrenAccept(this);
-// 		out.append("\n");
-// 		if(!node.isNested() || (node.getParent() instanceof ListItem && (node.next() instanceof Paragraph) && !node.isLastChild())) {
-// 			out.append("\n");
-// 		} else if(node.getParent() instanceof BlockQuote && (node.next() instanceof Paragraph)) {
-// 			indent();
-// 			out.append("\n");
-// 		}
+ 		if($node->isFirstChild()) {
+ 			$this->indent();
+ 		}
+ 		$node->childrenAccept($this);
+ 		$this->out .= "\n";
+ 		if(!$node->isNested() || (get_class($node->getParent()) === 'Koara\Ast\ListItem' && (get_class($node->next()) === 'Koara\Ast\Paragraph') && !$node->isLastChild())) {
+ 			$this->out .= "\n";
+ 		} else if($node->getParent() === 'Koara\Ast\BlockQuote' && (get_class($node->next()) === 'Koara\Ast\Paragraph')) {
+ 			$this->indent();
+ 			$this->out .= "\n";
+ 		}
  	}
 
  	public function visitImage($node)
@@ -175,32 +171,32 @@ class KoaraRenderer implements Renderer
 
  	public function visitText($node)
 	{
-// 		if(node.getParent() instanceof Code) {
-// 			out.append(node.getValue().toString());
-// 		} else {
+ 		if(get_class($node->getParent()) === 'Koara\Ast\Code') {
+ 			$this->out .= $node->getValue();
+ 		} else {
  			$this->out .= $this->escape($node->getValue());
-// 		}
+ 		}
  	}
 
  	public function visitStrong($node)
 	{
-// 		out.append("*");
-// 		node.childrenAccept(this);
-// 		out.append("*");
+ 		$this->out .= "*";
+ 		$node->childrenAccept($this);
+ 		$this->out .= "*";
  	}
 
  	public function visitEm($node)
 	{
-// 		out.append("_");
-// 		node.childrenAccept(this);
-// 		out.append("_");
+ 		$this->out .= "_";
+ 		$node->childrenAccept($this);
+ 		$this->out .= "_";
  	}
 
  	public function visitCode($node)
 	{
-// 		out.append("`");
-// 		node.childrenAccept(this);
-// 		out.append("`");
+ 		$this->out .= "`";
+ 		$node->childrenAccept($this);
+ 		$this->out .= "`";
  	}
 
  	public function visitLineBreak($node)
