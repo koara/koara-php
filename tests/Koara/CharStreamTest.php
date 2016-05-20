@@ -13,7 +13,7 @@ class CharStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $this->cs->getBeginColumn());
 		$this->assertEquals(1, $this->cs->getBeginLine());
 		$this->assertEquals(1, $this->cs->getEndColumn());
-		$this->assertEquals(1, $this->cs->getEndColumn());
+		$this->assertEquals(1, $this->cs->getEndLine());
 	}
 	
 	public function testReadChar() {
@@ -49,7 +49,7 @@ class CharStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $this->cs->getBeginColumn());
 		$this->assertEquals(1, $this->cs->getBeginLine());
 		$this->assertEquals(1, $this->cs->getEndColumn());
-		$this->assertEquals(1, $this->cs->getEndColumn());
+		$this->assertEquals(1, $this->cs->getEndLine());
 	}
 	
 	public function testReadCharWithUnicode() {
