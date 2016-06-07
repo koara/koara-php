@@ -21,159 +21,180 @@ class TokenManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("*", $token->image);
     }
 
-//    	@Test
-//    	public void testBackslash() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("\\"))).getNextToken();
-//    		assertEquals(TokenManager.BACKSLASH, token.kind);
-//    		assertEquals("\\", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testBacktick() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("`"))).getNextToken();
-//    		assertEquals(TokenManager.BACKTICK, token.kind);
-//    		assertEquals("`", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testCharSequenceLowerCase() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("m"))).getNextToken();
-//    		assertEquals(TokenManager.CHAR_SEQUENCE, token.kind);
-//    		assertEquals("m", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testCharSequenceUpperCase() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("C"))).getNextToken();
-//    		assertEquals(TokenManager.CHAR_SEQUENCE, token.kind);
-//    		assertEquals("C", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testColon() {
-//    		Token token = new TokenManager(new CharStream(new StringReader(":"))).getNextToken();
-//    		assertEquals(TokenManager.COLON, token.kind);
-//    		assertEquals(":", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testDash() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("-"))).getNextToken();
-//    		assertEquals(TokenManager.DASH, token.kind);
-//    		assertEquals("-", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testDigits() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("4"))).getNextToken();
-//    		assertEquals(TokenManager.DIGITS, token.kind);
-//    		assertEquals("4", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testDot() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("."))).getNextToken();
-//    		assertEquals(TokenManager.DOT, token.kind);
-//    		assertEquals(".", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testEol() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("\n"))).getNextToken();
-//    		assertEquals(TokenManager.EOL, token.kind);
-//    		assertEquals("\n", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testEq() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("="))).getNextToken();
-//    		assertEquals(TokenManager.EQ, token.kind);
-//    		assertEquals("=", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testEscapedChar() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("\\*"))).getNextToken();
-//    		assertEquals(TokenManager.ESCAPED_CHAR, token.kind);
-//    		assertEquals("\\*", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testGt() {
-//    		Token token = new TokenManager(new CharStream(new StringReader(">"))).getNextToken();
-//    		assertEquals(TokenManager.GT, token.kind);
-//    		assertEquals(">", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testImageLabel() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("image:"))).getNextToken();
-//    		assertEquals(TokenManager.IMAGE_LABEL, token.kind);
-//    		assertEquals("image:", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testLbrack() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("["))).getNextToken();
-//    		assertEquals(TokenManager.LBRACK, token.kind);
-//    		assertEquals("[", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testLparen() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("("))).getNextToken();
-//    		assertEquals(TokenManager.LPAREN, token.kind);
-//    		assertEquals("(", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testLt() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("<"))).getNextToken();
-//    		assertEquals(TokenManager.LT, token.kind);
-//    		assertEquals("<", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testRbrack() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("]"))).getNextToken();
-//    		assertEquals(TokenManager.RBRACK, token.kind);
-//    		assertEquals("]", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testRparen() {
-//    		Token token = new TokenManager(new CharStream(new StringReader(")"))).getNextToken();
-//    		assertEquals(TokenManager.RPAREN, token.kind);
-//    		assertEquals(")", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testSpace() {
-//    		Token token = new TokenManager(new CharStream(new StringReader(" "))).getNextToken();
-//    		assertEquals(TokenManager.SPACE, token.kind);
-//    		assertEquals(" ", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testTab() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("\t"))).getNextToken();
-//    		assertEquals(TokenManager.TAB, token.kind);
-//    		assertEquals("\t", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testUnderscore() {
-//    		Token token = new TokenManager(new CharStream(new StringReader("_"))).getNextToken();
-//    		assertEquals(TokenManager.UNDERSCORE, token.kind);
-//    		assertEquals("_", token.image);
-//    	}
-//
-//    	@Test
-//    	public void testSpaceAfterCharSequence() {
-//    		TokenManager tm = new TokenManager(new CharStream(new StringReader("a ")));
-//    		assertEquals("a", tm.getNextToken().image);
-//    		assertEquals(" ", tm.getNextToken().image);
-//    	}
+    public function testBackslash()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("\\")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::BACKSLASH, $token->kind);
+        $this->assertEquals("\\", $token->image);
+    }
+
+    public function testBacktick()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("`")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::BACKTICK, $token->kind);
+        $this->assertEquals("`", $token->image);
+    }
+
+    public function testCharSequenceLowerCase()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("m")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::CHAR_SEQUENCE, $token->kind);
+        $this->assertEquals("m", $token->image);
+    }
+
+    public function testCharSequenceUpperCase()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("C")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::CHAR_SEQUENCE, $token->kind);
+        $this->assertEquals("C", $token->image);
+    }
+
+    public function testColon()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader(":")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::COLON, $token->kind);
+        $this->assertEquals(":", $token->image);
+    }
+
+    public function testDash()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("-")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::DASH, $token->kind);
+        $this->assertEquals("-", $token->image);
+    }
+
+    public function testDigits()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("4")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::DIGITS, $token->kind);
+        $this->assertEquals("4", $token->image);
+    }
+
+    public function testDot()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader(".")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::DOT, $token->kind);
+        $this->assertEquals(".", $token->image);
+    }
+
+    public function testEol()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("\n")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::EOL, $token->kind);
+        $this->assertEquals("\n", $token->image);
+    }
+
+    public function testEq()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("=")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::EQ, $token->kind);
+        $this->assertEquals("=", $token->image);
+    }
+
+    public function testEscapedChar()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("\\*")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::ESCAPED_CHAR, $token->kind);
+        $this->assertEquals("\\*", $token->image);
+    }
+
+    public function testGt()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader(">")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::GT, $token->kind);
+        $this->assertEquals(">", $token->image);
+    }
+
+    public function testImageLabel()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("image:")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::IMAGE_LABEL, $token->kind);
+        $this->assertEquals("image:", $token->image);
+    }
+
+    public function testLbrack()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("[")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::LBRACK, $token->kind);
+        $this->assertEquals("[", $token->image);
+    }
+
+    public function testLparen()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("(")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::LPAREN, $token->kind);
+        $this->assertEquals("(", $token->image);
+    }
+
+    public function testLt()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("<")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::LT, $token->kind);
+        $this->assertEquals("<", $token->image);
+    }
+
+    public function testRbrack()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("]")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::RBRACK, $token->kind);
+        $this->assertEquals("]", $token->image);
+    }
+
+    public function testRparen()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader(")")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::RPAREN, $token->kind);
+        $this->assertEquals(")", $token->image);
+    }
+
+    public function testSpace()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader(" ")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::SPACE, $token->kind);
+        $this->assertEquals(" ", $token->image);
+    }
+
+    public function testTab()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("\t")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::TAB, $token->kind);
+        $this->assertEquals("\t", $token->image);
+    }
+
+    public function testUnderscore()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("_")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::UNDERSCORE, $token->kind);
+        $this->assertEquals("_", $token->image);
+    }
+
+    public function testSpaceAfterCharSequence()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("a ")));
+        $this->assertEquals("a", $tm->getNextToken()->image);
+        $this->assertEquals(" ", $tm->getNextToken()->image);
+    }
 
 
 }
