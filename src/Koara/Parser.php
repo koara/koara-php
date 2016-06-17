@@ -347,6 +347,7 @@ class Parser {
  				while ($this->getNextTokenKind() == TokenManager::GT) {
  					$this->consumeToken(TokenManager::GT);
  					$this->whiteSpace();
+ 					$this->blockquotePrefix();
  				}
  			}
  			$this->inline();

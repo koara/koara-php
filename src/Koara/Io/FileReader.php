@@ -15,9 +15,7 @@ class FileReader implements Reader
 	}
 	
     public function read(&$buffer, $offset, $length) {
-    	echo "\nINDEX: ".$this->index;
     	$filecontent = @file_get_contents($this->fileName, false, null, $this->index, $length * 4);
-		echo "\n//$filecontent";
     	if ($filecontent !== false && mb_strlen($filecontent) > 0) {
     		$charactersRead=0;
     		for($i=0; $i < $length; $i++) {
@@ -28,7 +26,6 @@ class FileReader implements Reader
 	    			$charactersRead++;
     			}
     		}
-    		echo "//$this->index";
     		return $charactersRead;
     	}
     	return -1;
