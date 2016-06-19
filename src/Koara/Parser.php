@@ -321,7 +321,9 @@ class Parser {
  		}
  		if ($this->fencesAhead()) {
  			$this->consumeToken(TokenManager::EOL);
+ 			$this->blockQuotePrefix();
  			$this->whiteSpace();
+ 			
  			while ($this->getNextTokenKind() == TokenManager::BACKTICK) {
  				$this->consumeToken(TokenManager::BACKTICK);
  			}
