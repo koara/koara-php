@@ -111,7 +111,10 @@ class KoaraRenderer implements Renderer
 		$this->indent();
 		$this->out .= "```";
 		$this->out .= "\n";
-		$this->out .= "\n";
+		if(!$node->isLastChild()) {
+			$this->indent();
+			$this->out .= "\n";
+		}
  	}
 
 	public function visitParagraph($node)
