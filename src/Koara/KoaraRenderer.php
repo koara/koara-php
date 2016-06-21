@@ -96,9 +96,9 @@ class KoaraRenderer implements Renderer
 
  	public function visitCodeBlock($node)
 	{
- 		$indent = "";
+ 		$str = "";
  		for($i = 0; $i < sizeof($this->left); $i++) {
- 			$indent .= $this->left[$i];
+ 			$str .= $this->left[$i];
  		}
 		
  		$this->out .= "```";
@@ -106,7 +106,7 @@ class KoaraRenderer implements Renderer
  			$this->out .= $node->getLanguage();
  		}
  		$this->out .= "\n";
-		$this->out .= preg_replace("/(?m)^/", $indent, $node->getValue());
+		$this->out .= preg_replace("/(?m)^/", $str, $node->getValue());
 		$this->out .= "\n";
 		$this->indent();
 		$this->out .= "```";
