@@ -17,6 +17,11 @@ class KoaraRenderer implements Renderer
      */
     private $left = [];
     
+    /**
+     * @var bool
+     */
+    private $hardWrap;
+    
 	public function visitDocument($node)
 	{
  		$this->left = [];
@@ -204,6 +209,9 @@ class KoaraRenderer implements Renderer
 
  	public function visitLineBreak($node)
 	{
+        if($this->hardWrap || $node->isExplicit()) {
+            $this->out .= "  ";
+        }
  		$this->out .= "\n";
  		$this->indent();
  	}
@@ -236,6 +244,10 @@ class KoaraRenderer implements Renderer
  		}
  	}
 
+ 	public function setHardWrap($hardWrap) {
+ 		$this->hardWrap = $hardWrap;
+ 	}
+ 	
  	public function getOutput() {
  		return trim($this->out);
  	}

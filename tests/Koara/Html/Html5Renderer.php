@@ -24,6 +24,12 @@ class Html5Renderer implements Renderer
      * @var int[]
      */
     private $listSequence = [];
+    
+    /**
+     *
+     * @var bool
+     */
+    private $hardWrap = true;
 
     public function visitDocument($node)
     {
@@ -186,7 +192,10 @@ class Html5Renderer implements Renderer
 
     public function visitLineBreak($node)
     {
-        $this->out .= "<br>\n".$this->indent();
+    	if($this->hardWrap || $node->isExplicit()) {
+    		$this->out .= "<br>";
+    	}
+        $this->out .= "\n".$this->indent();
         $node->childrenAccept($this);
     }
 
