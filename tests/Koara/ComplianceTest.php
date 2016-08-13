@@ -29,9 +29,7 @@ class ComplianceTest extends \PHPUnit_Framework_TestCase {
 	public function testKoaraToKoara($module, $testcase) {
 		$expected = file_get_contents('testsuite/output/koara/'.$module.'/'.$testcase.'.kd');
 		$expected = mb_convert_encoding($expected, 'UTF-8', mb_detect_encoding($expected, 'UTF-8, ISO-8859-1', true));
-		$expectedHtml = file_get_contents('testsuite/output/html5/'.$module.'/'.$testcase.'.htm');
-		$expectedHtml = mb_convert_encoding($expectedHtml, 'UTF-8', mb_detect_encoding($expectedHtml, 'UTF-8, ISO-8859-1', true));
-		
+
 		$parser = new Parser();
 		$document = $parser->parseFile('testsuite/input/'.$module.'/'.$testcase.'.kd');
 		$renderer = new KoaraRenderer();
