@@ -47,4 +47,4 @@ You can configure the Parser:
 ## Related Projects
 
 - [koara / koara-php-html](http://www.github.com/koara/koara-php-html): Koara to Html renderer written in PHP
-- [koara / koara-php-xml](http://www.github.com/koara/koara-php-html): Koara to Xml renderer written in PHP
+- [koara / koara-php-xml](http://www.github.com/koara/koara-php-xml): Koara to Xml renderer written in PHP
