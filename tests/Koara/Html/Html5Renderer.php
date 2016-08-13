@@ -193,10 +193,10 @@ class Html5Renderer implements Renderer
 	public function visitLineBreak($node)
     {
     	if($this->hardWrap || $node->isExplicit()) {
-    //		$this->out .= "<br>";
+    		$this->out .= "<br>";
     	}
         $this->out .= "\n";
-        $this->indent();
+        $this->out .= $this->indent();
         $node->childrenAccept($this);
     }
 
