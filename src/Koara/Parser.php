@@ -563,10 +563,7 @@ class Parser {
  			$this->consumeToken($this->getNextTokenKind());
  		}
  		$token = $this->consumeToken(TokenManager::EOL);
- 		
- 		//substr($token->image, 2) == "  "
- 		
-        $linebreak->setExplicit(true);
+        $linebreak->setExplicit(substr($token->image, 2) == "  ");
  		$this->tree->closeScope($linebreak);
  	}
 	
