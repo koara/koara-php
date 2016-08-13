@@ -29,7 +29,7 @@ class Html5Renderer implements Renderer
      *
      * @var bool
      */
-    private $hardWrap = true;
+    private $hardWrap = false;
 
     public function visitDocument($node)
     {
@@ -190,12 +190,13 @@ class Html5Renderer implements Renderer
         );
     }
 
-    public function visitLineBreak($node)
+	public function visitLineBreak($node)
     {
     	if($this->hardWrap || $node->isExplicit()) {
-    		$this->out .= "<br>";
+    //		$this->out .= "<br>";
     	}
-        $this->out .= "\n".$this->indent();
+        $this->out .= "\n";
+        $this->indent();
         $node->childrenAccept($this);
     }
 
