@@ -25,7 +25,7 @@ class KoaraRenderer implements Renderer
 	public function visitDocument($node)
 	{
  		$this->left = [];
-		$node->childrenAccept($this);
+ 		$node->childrenAccept($this);
 	}
 	
 	public function visitHeading($node)
