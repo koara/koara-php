@@ -34,7 +34,11 @@ $result2 = $parser->parseFile('hello.kd'); // parse a file
 
 ## Configuration
 You can configure the Parser:
-
+-  **setHardWrap($hardWrap)**  
+   Default: `false`
+   
+   Specify if newlines should be hard-wrapped (return-based linebreaks) by default.
+   
 -  **setModules($modules)**  
    Default:	`array("paragraphs", "headings", "lists", "links", "images", "formatting", "blockquotes", "code")`
    
