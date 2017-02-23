@@ -196,5 +196,18 @@ class TokenManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(" ", $tm->getNextToken()->image);
     }
 
+    public function testLineBreak()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("a\nb")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::CHAR_SEQUENCE, $token->kind);
+        $this->assertEquals("a", $token->image);
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::EOL, $token->kind);
+        $this->assertEquals("\n", $token->image);
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::CHAR_SEQUENCE, $token->kind);
+        $this->assertEquals("b", $token->image);
+    }
 
 }
