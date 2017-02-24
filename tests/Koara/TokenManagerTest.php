@@ -93,6 +93,14 @@ class TokenManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("\n", $token->image);
     }
 
+    public function testEolWithSpaces()
+    {
+        $tm = new TokenManager(new CharStream(new StringReader("  \n")));
+        $token = $tm->getNextToken();
+        $this->assertEquals(TokenManager::EOL, $token->kind);
+        $this->assertEquals("  \n", $token->image);
+    }
+
     public function testEq()
     {
         $tm = new TokenManager(new CharStream(new StringReader("=")));
