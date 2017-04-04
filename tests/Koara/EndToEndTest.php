@@ -6,6 +6,12 @@ use Koara\Html\Html5Renderer;
 
 class EndToEndTest extends \PHPUnit_Framework_TestCase {
 	
+	private $input;
+	
+	function __construct() {
+		$this->input = file_get_contents('testsuite/input/end2end.kd');
+	}
+	
 	public function testScenario000001() {
 		$this->assertOutput("end2end-000001", "paragraphs" );
 	}
@@ -1032,7 +1038,7 @@ class EndToEndTest extends \PHPUnit_Framework_TestCase {
 		
 		$parser = new Parser ();
 		$parser->setModules ( array_slice ( func_get_args (), 1 ) );
-		$document = $parser->parseFile ('testsuite/input/end2end.kd' );
+		$document = $parser->parse($this->input);
 		$renderer = new Html5Renderer ();
 		$document->accept ( $renderer );
 		
