@@ -1,4 +1,4 @@
-[![Koara](http://www.koara.io/logo.png)](http://www.koara.io)
+[![Koara](https://www.codeaddslife.com/koara.png)](https://www.codeaddslife.com/koara)
 
 [![Build Status](https://img.shields.io/travis/koara/koara-php.svg)](https://travis-ci.org/koara/koara-php)
 [![Coverage Status](https://img.shields.io/coveralls/koara/koara-php.svg)](https://coveralls.io/github/koara/koara-php?branch=master)
@@ -6,11 +6,11 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/koara/koara-php/blob/master/LICENSE)
 
 # Koara-php
-[Koara](http://www.koara.io) is a modular lightweight markup language. This project is the core koara parser written in PHP.  
+[Koara](https://www.codeaddslife.com/koara) is a modular lightweight markup language. This project is the core koara parser written in PHP.  
 If you are interested in converting koara to a specific outputFormat, please look the [Related Projects](#related-projects) section.
 
 ## Getting started
-- Download [ZIP file](https://github.com/koara/koara-php/archive/0.14.0.zip)
+- Download [ZIP file](https://github.com/koara/koara-php/archive/0.15.0.zip)
 - Composer
 
   ``` bash
