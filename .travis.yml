@@ -4,12 +4,11 @@ php:
   - 5.5
   - 5.6
   - 7.0
-
 sudo: false
-
 before_script:
   - composer update --prefer-source --prefer-lowest --prefer-stable
-
 script: 
   - composer install
   - phpunit
+notifications:
+    email: false
